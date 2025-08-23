@@ -8,11 +8,11 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { usersTable } from '@/users/schema';
 import { eq } from 'drizzle-orm';
-import { compare, hash } from 'bcryptjs';
 import { UserDto } from '@/users/dto/user.dto';
 import { DeviceType } from '@/common/decorators/device.decorator';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
+import { hashPassword, validatePassword } from './utils/password';
 
 @Injectable()
 export class AuthService {
@@ -31,7 +31,7 @@ export class AuthService {
         throw new NotFoundException();
       }
 
-      if (!(await compare(password, user.password))) {
+      if (!(await validatePassword(password, user.password))) {
         throw new UnauthorizedException();
       }
 
@@ -52,7 +52,7 @@ export class AuthService {
         .insert(usersTable)
         .values({
           email: registerDto.email,
-          password: await hash(registerDto.password, 10),
+          password: await hashPassword(registerDto.password),
         })
         .returning();
 
