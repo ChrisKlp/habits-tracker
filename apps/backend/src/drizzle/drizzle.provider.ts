@@ -2,11 +2,13 @@ import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as userSchema from '@/users/schema';
+import * as passportSchema from '@/auth/schema';
 
 export const DRIZZLE_PROVIDER = 'DRIZZLE_PROVIDER';
 
 const schema = {
   ...userSchema,
+  ...passportSchema,
 };
 
 export const drizzleProvider = {

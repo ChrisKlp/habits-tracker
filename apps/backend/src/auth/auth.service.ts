@@ -9,14 +9,21 @@ import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { usersTable } from '@/users/schema';
 import { eq } from 'drizzle-orm';
 import { UserDto } from '@/users/dto/user.dto';
-import { DeviceType } from '@/common/decorators/device.decorator';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { hashPassword, validatePassword } from './utils/password';
+import { TokenService } from './token.service';
+import { ConfigService } from '@nestjs/config';
+import type { DeviceType } from '@/common/decorators/device.decorator';
+import { passportTable } from './schema';
 
 @Injectable()
 export class AuthService {
-  constructor(@Drizzle() private readonly db: NodePgDatabase) {}
+  constructor(
+    @Drizzle() private readonly db: NodePgDatabase,
+    private readonly tokenService: TokenService,
+    private readonly config: ConfigService,
+  ) {}
 
   async validateUser(email: string, password: string) {
     try {
@@ -35,14 +42,46 @@ export class AuthService {
         throw new UnauthorizedException();
       }
 
-      return user;
+      return { userId: user.id, role: user.role };
     } catch {
       throw new UnauthorizedException('Credentials are not valid');
     }
   }
 
   async login(user: UserDto, device: DeviceType, response: Response) {
-    await new Promise((resolve) => setTimeout(resolve, 100));
+    const {
+      accessToken,
+      refreshToken,
+      accessTokenExpiresTime,
+      refreshTokenExpiresTime,
+    } = await this.tokenService.createJwtToken(user);
+
+    const now = new Date();
+    await this.db.insert(passportTable).values({
+      userId: user.id,
+      ip: device.ip,
+      refreshToken,
+      createdAt: now,
+      updatedAt: now,
+      deviceType: device.deviceType,
+      deviceName: device.deviceName,
+      deviceOs: device.deviceOs,
+      browser: device.browser,
+    });
+
+    response.cookie('Authentication', accessToken, {
+      httpOnly: true,
+      secure: this.config.get('NODE_ENV') === 'production',
+      expires: accessTokenExpiresTime,
+      sameSite: 'none',
+    });
+    response.cookie('Refresh', refreshToken, {
+      httpOnly: true,
+      secure: this.config.get('NODE_ENV') === 'production',
+      expires: refreshTokenExpiresTime,
+      sameSite: 'none',
+    });
+
     return user;
   }
 

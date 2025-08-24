@@ -1,18 +1,20 @@
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { Device, type DeviceType } from '@/common/decorators/device.decorator';
 import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
 import { UserDto } from '@/users/dto/user.dto';
 import { Body, Controller, Post, Res, UseGuards } from '@nestjs/common';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
+import { Device, type DeviceType } from '@/common/decorators/device.decorator';
+import { Public } from '@/common/decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('login')
+  @Public()
   @UseGuards(LocalAuthGuard)
+  @Post('login')
   async login(
     @CurrentUser() user: UserDto,
     @Device() device: DeviceType,
