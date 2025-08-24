@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Drizzle } from 'src/common/decorators/drizzle.decorator';
 import { usersTable } from './schema';
@@ -8,11 +8,22 @@ import { eq } from 'drizzle-orm';
 export class UsersService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
-  findAll() {
+  async findAll() {
     return this.db.select().from(usersTable);
   }
 
-  findOne(id: string) {
-    return this.db.select().from(usersTable).where(eq(usersTable.id, id));
+  async findOne(id: string) {
+    try {
+      const user = await this.db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.id, id))
+        .limit(1)
+        .then(([user]) => user);
+
+      return user;
+    } catch {
+      throw new NotFoundException('User not found');
+    }
   }
 }
