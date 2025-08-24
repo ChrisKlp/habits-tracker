@@ -10,12 +10,12 @@ import { usersTable } from '@/users/schema';
 import { eq } from 'drizzle-orm';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
-import { hashPassword, validatePassword } from './utils/password';
+import { hashValue, validateValue } from './utils/hash';
 import { TokenService } from './token.service';
 import { ConfigService } from '@nestjs/config';
 import type { DeviceType } from '@/common/decorators/device.decorator';
-import { passportTable } from './schema';
 import { ValidateUser } from '@/types';
+import { UsersService } from '@/users/users.service';
 
 @Injectable()
 export class AuthService {
@@ -23,30 +23,8 @@ export class AuthService {
     @Drizzle() private readonly db: NodePgDatabase,
     private readonly tokenService: TokenService,
     private readonly config: ConfigService,
+    private readonly usersService: UsersService,
   ) {}
-
-  async validateUser(email: string, password: string): Promise<ValidateUser> {
-    try {
-      const user = await this.db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email))
-        .limit(1)
-        .then(([user]) => user);
-
-      if (!user) {
-        throw new NotFoundException();
-      }
-
-      if (!(await validatePassword(password, user.password))) {
-        throw new UnauthorizedException();
-      }
-
-      return { userId: user.id, role: user.role };
-    } catch {
-      throw new UnauthorizedException('Credentials are not valid');
-    }
-  }
 
   async login(user: ValidateUser, device: DeviceType, response: Response) {
     const {
@@ -56,18 +34,7 @@ export class AuthService {
       refreshTokenExpiresTime,
     } = await this.tokenService.createJwtToken(user);
 
-    const now = new Date();
-    await this.db.insert(passportTable).values({
-      userId: user.userId,
-      ip: device.ip,
-      refreshToken,
-      createdAt: now,
-      updatedAt: now,
-      deviceType: device.deviceType,
-      deviceName: device.deviceName,
-      deviceOs: device.deviceOs,
-      browser: device.browser,
-    });
+    await this.tokenService.insertToken(user, device, refreshToken);
 
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
@@ -91,13 +58,60 @@ export class AuthService {
         .insert(usersTable)
         .values({
           email: registerDto.email,
-          password: await hashPassword(registerDto.password),
+          password: await hashValue(registerDto.password),
         })
         .returning();
 
       return user;
     } catch {
       throw new InternalServerErrorException('Failed to register user');
+    }
+  }
+
+  async logout(user: ValidateUser) {
+    await this.tokenService.removeToken(user);
+  }
+
+  async validateUser(email: string, password: string): Promise<ValidateUser> {
+    try {
+      const user = await this.db
+        .select()
+        .from(usersTable)
+        .where(eq(usersTable.email, email))
+        .limit(1)
+        .then(([user]) => user);
+
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      if (!(await validateValue(password, user.password))) {
+        throw new UnauthorizedException('Credentials are not valid');
+      }
+
+      return { userId: user.id, role: user.role };
+    } catch (err) {
+      console.error(err);
+      throw new UnauthorizedException('Credentials are not valid');
+    }
+  }
+
+  async validateUserRefreshToken(
+    refreshToken: string,
+    userId: string,
+  ): Promise<ValidateUser> {
+    try {
+      const user = await this.usersService.findOne(userId);
+      const passport = await this.tokenService.findLastPassport(userId);
+
+      if (!(await validateValue(refreshToken, passport.refreshToken))) {
+        console.log(refreshToken, passport.refreshToken);
+        throw new UnauthorizedException('Refresh token is not valid.');
+      }
+      return { userId: user.id, role: user.role };
+    } catch (err) {
+      console.error(err);
+      throw new UnauthorizedException('Refresh token is not valid.');
     }
   }
 }

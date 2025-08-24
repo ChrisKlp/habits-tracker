@@ -21,6 +21,10 @@ export class UsersService {
         .limit(1)
         .then(([user]) => user);
 
+      if (!user) {
+        throw new Error();
+      }
+
       return user;
     } catch {
       throw new NotFoundException('User not found');

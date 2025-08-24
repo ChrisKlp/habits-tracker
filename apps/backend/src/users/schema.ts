@@ -1,3 +1,5 @@
+import { passportTable } from '@/auth/schema';
+import { relations } from 'drizzle-orm';
 import { varchar, uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core';
 
 export const usersTable = pgTable('users', {
@@ -14,3 +16,7 @@ export const usersTable = pgTable('users', {
     .notNull()
     .$onUpdate(() => new Date()),
 });
+
+export const usersRelations = relations(usersTable, ({ many }) => ({
+  passport: many(passportTable),
+}));

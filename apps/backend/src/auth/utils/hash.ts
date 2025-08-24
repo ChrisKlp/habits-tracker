@@ -1,6 +1,6 @@
 import * as argon2 from 'argon2';
 
-export const hashPassword = async (password: string) => {
+export const hashValue = async (password: string) => {
   return argon2.hash(password, {
     type: argon2.argon2id,
     memoryCost: 2 ** 8,
@@ -9,7 +9,7 @@ export const hashPassword = async (password: string) => {
   });
 };
 
-export const validatePassword = async (
+export const validateValue = async (
   plainPassword: string,
   hashedPassword: string,
 ) => {
