@@ -1,7 +1,7 @@
-import { TCurrentUser } from './jwt';
+import { ValidateUser } from '.';
 
 declare namespace Express {
   export interface Request {
-    user?: TCurrentUser;
+    user?: ValidateUser;
   }
 }

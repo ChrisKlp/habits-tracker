@@ -1,6 +1,5 @@
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { JwtPayload } from '@/types/jwt';
-import { UserDto } from '@/users/dto/user.dto';
+import { JwtPayload, ValidateUser } from '@/types';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
@@ -12,9 +11,9 @@ export class TokenService {
     @Drizzle() private readonly db: NodePgDatabase,
   ) {}
 
-  async generateTokens(user: UserDto) {
+  async generateTokens(user: ValidateUser) {
     const payload: JwtPayload = {
-      sub: user.id,
+      sub: user.userId,
       role: user.role,
     };
 
@@ -38,7 +37,7 @@ export class TokenService {
     return date;
   }
 
-  async createJwtToken(user: UserDto) {
+  async createJwtToken(user: ValidateUser) {
     const { accessToken, refreshToken } = await this.generateTokens(user);
     const accessTokenExpiresTime = this.generateExpiresTime(
       parseInt(this.config.getOrThrow('ACCESS_TOKEN_EXPIRATION_MS')),

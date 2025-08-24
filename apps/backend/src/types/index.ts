@@ -5,7 +5,7 @@ export interface JwtPayload {
   iat?: number;
 }
 
-export interface TCurrentUser {
+export interface ValidateUser {
   userId: string;
   role: string;
 }

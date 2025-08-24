@@ -8,7 +8,6 @@ import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { usersTable } from '@/users/schema';
 import { eq } from 'drizzle-orm';
-import { UserDto } from '@/users/dto/user.dto';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { hashPassword, validatePassword } from './utils/password';
@@ -16,6 +15,7 @@ import { TokenService } from './token.service';
 import { ConfigService } from '@nestjs/config';
 import type { DeviceType } from '@/common/decorators/device.decorator';
 import { passportTable } from './schema';
+import { ValidateUser } from '@/types';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +25,7 @@ export class AuthService {
     private readonly config: ConfigService,
   ) {}
 
-  async validateUser(email: string, password: string) {
+  async validateUser(email: string, password: string): Promise<ValidateUser> {
     try {
       const user = await this.db
         .select()
@@ -48,7 +48,7 @@ export class AuthService {
     }
   }
 
-  async login(user: UserDto, device: DeviceType, response: Response) {
+  async login(user: ValidateUser, device: DeviceType, response: Response) {
     const {
       accessToken,
       refreshToken,
@@ -58,7 +58,7 @@ export class AuthService {
 
     const now = new Date();
     await this.db.insert(passportTable).values({
-      userId: user.id,
+      userId: user.userId,
       ip: device.ip,
       refreshToken,
       createdAt: now,
