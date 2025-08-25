@@ -1,13 +1,10 @@
 import {
   Injectable,
   InternalServerErrorException,
-  NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { usersTable } from '@/users/schema';
-import { eq } from 'drizzle-orm';
 import { Response } from 'express';
 import { RegisterDto } from './dto/register.dto';
 import { hashValue, validateValue } from './utils/hash';
@@ -16,12 +13,15 @@ import { ConfigService } from '@nestjs/config';
 import type { DeviceType } from '@/common/decorators/device.decorator';
 import { ValidateUser } from '@/types';
 import { UsersService } from '@/users/users.service';
+import { usersTable } from '@/drizzle/schema';
+import { SessionService } from './session.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Drizzle() private readonly db: NodePgDatabase,
     private readonly tokenService: TokenService,
+    private readonly sessionService: SessionService,
     private readonly config: ConfigService,
     private readonly usersService: UsersService,
   ) {}
@@ -34,7 +34,7 @@ export class AuthService {
       refreshTokenExpiresTime,
     } = await this.tokenService.createJwtToken(user);
 
-    await this.tokenService.insertToken(user, device, refreshToken);
+    await this.sessionService.addSession(user.userId, device, refreshToken);
 
     response.cookie('Authentication', accessToken, {
       httpOnly: true,
@@ -68,49 +68,38 @@ export class AuthService {
     }
   }
 
-  async logout(user: ValidateUser) {
-    await this.tokenService.removeToken(user);
+  async logout(user: ValidateUser, refreshToken: string) {
+    const currentSession = await this.sessionService.validateSession(
+      user.userId,
+      refreshToken,
+    );
+    await this.sessionService.removeSession(currentSession.id);
   }
 
   async validateUser(email: string, password: string): Promise<ValidateUser> {
     try {
-      const user = await this.db
-        .select()
-        .from(usersTable)
-        .where(eq(usersTable.email, email))
-        .limit(1)
-        .then(([user]) => user);
-
-      if (!user) {
-        throw new NotFoundException('User not found');
-      }
+      const user = await this.usersService.findByEmail(email);
 
       if (!(await validateValue(password, user.password))) {
         throw new UnauthorizedException('Credentials are not valid');
       }
 
       return { userId: user.id, role: user.role };
-    } catch (err) {
-      console.error(err);
+    } catch {
       throw new UnauthorizedException('Credentials are not valid');
     }
   }
 
   async validateUserRefreshToken(
-    refreshToken: string,
     userId: string,
+    refreshToken: string,
   ): Promise<ValidateUser> {
     try {
       const user = await this.usersService.findOne(userId);
-      const passport = await this.tokenService.findLastPassport(userId);
+      await this.sessionService.validateSession(userId, refreshToken);
 
-      if (!(await validateValue(refreshToken, passport.refreshToken))) {
-        console.log(refreshToken, passport.refreshToken);
-        throw new UnauthorizedException('Refresh token is not valid.');
-      }
       return { userId: user.id, role: user.role };
-    } catch (err) {
-      console.error(err);
+    } catch {
       throw new UnauthorizedException('Refresh token is not valid.');
     }
   }

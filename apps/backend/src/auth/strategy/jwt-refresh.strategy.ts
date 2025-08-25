@@ -31,8 +31,8 @@ export class JwtRefreshStrategy extends PassportStrategy(
     done: VerifiedCallback,
   ) {
     const user = await this.authService.validateUserRefreshToken(
-      request.cookies?.Refresh as string,
       payload.sub,
+      request.cookies?.Refresh as string,
     );
     return done(null, user);
   }

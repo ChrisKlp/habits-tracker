@@ -6,10 +6,11 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Res,
   UseGuards,
 } from '@nestjs/common';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { Device, type DeviceType } from '@/common/decorators/device.decorator';
@@ -54,9 +55,11 @@ export class AuthController {
   @Post('logout')
   async logout(
     @CurrentUser() user: ValidateUser,
+    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
   ) {
-    await this.authService.logout(user);
+    const refreshToken = req.cookies?.Refresh as string;
+    await this.authService.logout(user, refreshToken);
     res.clearCookie('Authentication');
     res.clearCookie('Refresh');
   }

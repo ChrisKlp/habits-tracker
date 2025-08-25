@@ -1,4 +1,4 @@
-import { usersTable } from '@/users/schema';
+import { usersTable } from '@/drizzle/schema/users';
 import { createSelectSchema } from 'drizzle-zod';
 import { createZodDto } from 'nestjs-zod';
 

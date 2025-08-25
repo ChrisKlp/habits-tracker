@@ -7,6 +7,7 @@ import { TokenService } from './token.service';
 import { JwtStrategy } from './strategy/jwt.strategy';
 import { JwtRefreshStrategy } from './strategy/jwt-refresh.strategy';
 import { UsersModule } from '@/users/users.module';
+import { SessionService } from './session.service';
 
 @Module({
   imports: [UsersModule, PassportModule],
@@ -17,6 +18,7 @@ import { UsersModule } from '@/users/users.module';
     JwtStrategy,
     JwtRefreshStrategy,
     TokenService,
+    SessionService,
   ],
 })
 export class AuthModule {}
