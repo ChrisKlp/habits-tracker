@@ -15,6 +15,13 @@
       "when": 1756113517524,
       "tag": "0001_panoramic_rocket_raccoon",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1756129696833,
+      "tag": "0002_green_the_enforcers",
+      "breakpoints": true
     }
   ]
 }

@@ -13,7 +13,6 @@ export const sessionsTable = pgTable('sessions', {
   userAgent: text('user_agent').default('unknown'),
   refreshToken: text('refresh_token').notNull(),
 
-  // Foreign key for many-to-one relationship
   userId: uuid('user_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),

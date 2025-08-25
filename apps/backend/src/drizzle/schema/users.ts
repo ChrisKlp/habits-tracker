@@ -1,6 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { varchar, uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core';
 import { sessionsTable } from './sessions';
+import { profilesTable } from './profiles';
+import { habitsTable } from './habits';
 
 export const usersTable = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -17,6 +19,11 @@ export const usersTable = pgTable('users', {
     .$onUpdate(() => new Date()),
 });
 
-export const usersRelations = relations(usersTable, ({ many }) => ({
+export const usersRelations = relations(usersTable, ({ many, one }) => ({
   sessions: many(sessionsTable),
+  profile: one(profilesTable, {
+    fields: [usersTable.id],
+    references: [profilesTable.userId],
+  }),
+  habits: many(habitsTable),
 }));
