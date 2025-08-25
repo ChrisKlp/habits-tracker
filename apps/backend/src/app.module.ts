@@ -24,11 +24,11 @@ import { RolesGuard } from './common/guards/roles.guard';
   providers: [
     {
       provide: APP_GUARD,
-      useClass: JwtAuthGuard,
+      useExisting: JwtAuthGuard,
     },
     {
       provide: APP_GUARD,
-      useClass: RolesGuard,
+      useExisting: RolesGuard,
     },
     {
       provide: APP_PIPE,
@@ -38,6 +38,8 @@ import { RolesGuard } from './common/guards/roles.guard';
       provide: APP_FILTER,
       useClass: DrizzleExceptionFilter,
     },
+    JwtAuthGuard,
+    RolesGuard,
   ],
 })
 export class AppModule {}
