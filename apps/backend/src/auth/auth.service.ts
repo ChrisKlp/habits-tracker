@@ -40,13 +40,11 @@ export class AuthService {
       httpOnly: true,
       secure: this.config.get('NODE_ENV') === 'production',
       expires: accessTokenExpiresTime,
-      sameSite: 'none',
     });
     response.cookie('Refresh', refreshToken, {
       httpOnly: true,
       secure: this.config.get('NODE_ENV') === 'production',
       expires: refreshTokenExpiresTime,
-      sameSite: 'none',
     });
 
     return user;
