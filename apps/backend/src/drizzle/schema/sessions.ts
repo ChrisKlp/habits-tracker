@@ -1,8 +1,8 @@
 import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
-import { usersTable } from '@/users/schema';
 import { relations } from 'drizzle-orm';
+import { usersTable } from './users';
 
-export const passportTable = pgTable('passport', {
+export const sessionsTable = pgTable('session', {
   id: uuid('id').primaryKey().defaultRandom(),
   ip: text('ip').default('unknown'),
   location: text('location').default('unknown'),
@@ -26,9 +26,9 @@ export const passportTable = pgTable('passport', {
     .$onUpdate(() => new Date()),
 });
 
-export const passportRelations = relations(passportTable, ({ one }) => ({
+export const sessionsRelations = relations(sessionsTable, ({ one }) => ({
   user: one(usersTable, {
-    fields: [passportTable.userId],
+    fields: [sessionsTable.userId],
     references: [usersTable.id],
   }),
 }));

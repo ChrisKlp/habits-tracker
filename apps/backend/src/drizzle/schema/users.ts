@@ -1,6 +1,6 @@
-import { passportTable } from '@/auth/schema';
 import { relations } from 'drizzle-orm';
 import { varchar, uuid, text, timestamp, pgTable } from 'drizzle-orm/pg-core';
+import { sessionsTable } from './sessions';
 
 export const usersTable = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -18,5 +18,5 @@ export const usersTable = pgTable('users', {
 });
 
 export const usersRelations = relations(usersTable, ({ many }) => ({
-  passport: many(passportTable),
+  sessions: many(sessionsTable),
 }));
