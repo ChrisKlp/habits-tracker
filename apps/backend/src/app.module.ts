@@ -9,6 +9,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DrizzleExceptionFilter } from './common/filters/drizzle-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
+import { HabitsModule } from './habits/habits.module';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { RolesGuard } from './common/guards/roles.guard';
     DrizzleModule,
     UsersModule,
     AuthModule,
+    HabitsModule,
   ],
   controllers: [],
   providers: [
