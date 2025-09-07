@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { UsersService } from '../src/users/users.service';
 import { App } from 'supertest/types';
-import { mockUser, mockUsersService } from './mocks/mock-users-service';
+import { mockUsers, mockUsersService } from './mocks/mock-users-service';
 import { createTestingModule } from './utils/createTestingModule';
 
 async function createUsersTestingModule(
@@ -34,14 +34,24 @@ describe('UsersController (integration, mock Drizzle)', () => {
     const response = await request(app.getHttpServer())
       .get('/users')
       .expect(200);
-    expect(response.body).toEqual([mockUser]);
+    expect(response.body).toEqual(mockUsers);
   });
 
   it('/users/:id (GET) should return one user', async () => {
     const response = await request(app.getHttpServer())
       .get('/users/1')
       .expect(200);
-    expect(response.body).toEqual(mockUser);
+    expect(response.body).toEqual(mockUsers[0]);
+  });
+
+  it('/users/:id (GET) should return 404 if not found', async () => {
+    const response = await request(app.getHttpServer())
+      .get('/users/10')
+      .expect(404);
+    expect(response.body).toMatchObject({
+      error: 'Not Found',
+      statusCode: 404,
+    });
   });
 
   it('/users/:id (GET) should return 401 if not authenticated', async () => {
