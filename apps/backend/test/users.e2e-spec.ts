@@ -6,20 +6,14 @@ import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
-import { loginUser } from './utils/auth.utils';
+import { loginUser, userIds } from './utils/auth.utils';
 import {
   cleanupDb,
   DbUtils,
-  seedUser,
+  createUser,
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
-
-const userIds = {
-  admin: '36782f66-2655-4ec9-a239-1a6ff022fef8',
-  user: '36782f66-2655-4ec9-a239-1a6ff022fef9',
-  user2: '36782f66-2655-4ec9-a239-1a6ff022fefa',
-};
 
 describe('UsersController (e2e)', () => {
   let app: INestApplication<App>;
@@ -43,7 +37,7 @@ describe('UsersController (e2e)', () => {
 
   beforeEach(async () => {
     await truncateAllTables(dbUtils);
-    await seedUser(dbUtils, {
+    await createUser(dbUtils, {
       id: userIds.admin,
       email: 'admin@test.com',
       role: 'admin',
@@ -60,7 +54,7 @@ describe('UsersController (e2e)', () => {
   describe('/users (GET)', () => {
     it('should return all users for an admin', async () => {
       // Arrange
-      await seedUser(dbUtils, {
+      await createUser(dbUtils, {
         id: userIds.user,
         email: 'user@test.com',
         role: 'user',
@@ -88,7 +82,7 @@ describe('UsersController (e2e)', () => {
 
     it('should return 403 for a non-admin user', async () => {
       // Arrange
-      await seedUser(dbUtils, {
+      await createUser(dbUtils, {
         id: userIds.user,
         email: 'user@test.com',
         role: 'user',
@@ -106,7 +100,7 @@ describe('UsersController (e2e)', () => {
   describe('/users/:id (GET)', () => {
     it('should return a specific user by id', async () => {
       // Arrange
-      const [newUser] = await seedUser(dbUtils, {
+      const [newUser] = await createUser(dbUtils, {
         id: userIds.user2,
         email: 'user2@test.com',
         role: 'user',

@@ -2,12 +2,18 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 
+export const userIds = {
+  admin: '36782f66-2655-4ec9-a239-1a6ff022fef8',
+  user: '36782f66-2655-4ec9-a239-1a6ff022fef9',
+  user2: '36782f66-2655-4ec9-a239-1a6ff022fefa',
+};
+
+export const mockPassword = 'passwordA123!';
+
 type LoginCredentials = {
   email: string;
   password?: string;
 };
-
-export const mockPassword = 'passwordA123!';
 
 export async function loginUser(
   app: INestApplication<App>,

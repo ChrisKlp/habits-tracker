@@ -39,11 +39,14 @@ export const cleanupDb = async ({ db, pool }: DbUtils) => {
   await pool.end();
 };
 
-type UserSeed = Omit<typeof schema.usersTable.$inferInsert, 'password'> & {
+type CreateUserDto = Omit<typeof schema.usersTable.$inferInsert, 'password'> & {
   password?: string;
 };
 
-export const seedUser = async ({ db }: Pick<DbUtils, 'db'>, user: UserSeed) => {
+export const createUser = async (
+  { db }: Pick<DbUtils, 'db'>,
+  user: CreateUserDto,
+) => {
   const hashedPassword = await hashValue(mockPassword);
   return db
     .insert(schema.usersTable)

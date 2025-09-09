@@ -31,9 +31,15 @@ export class HabitsController {
     return this.habitsService.findAll();
   }
 
-  @Get()
+  @Get('my')
   async findMyHabits(@CurrentUser() user: ValidateUser) {
     return this.habitsService.findMyHabits(user.userId);
+  }
+
+  @Roles('admin')
+  @Get('admin/:id')
+  async findOneAsAdmin(@Param('id') id: string) {
+    return this.habitsService.findOneAsAdmin(id);
   }
 
   @Get(':id')

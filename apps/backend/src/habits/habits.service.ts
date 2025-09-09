@@ -10,10 +10,14 @@ export class HabitsService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
   async create(userId: string, createHabitDto: CreateHabitDto) {
-    return this.db.insert(habitsTable).values({
-      ...createHabitDto,
-      userId,
-    });
+    return this.db
+      .insert(habitsTable)
+      .values({
+        ...createHabitDto,
+        userId,
+      })
+      .returning()
+      .then(([habit]) => habit);
   }
 
   async findAll() {
@@ -25,6 +29,15 @@ export class HabitsService {
       .select()
       .from(habitsTable)
       .where(eq(habitsTable.userId, userId));
+  }
+
+  async findOneAsAdmin(id: string) {
+    return this.db
+      .select()
+      .from(habitsTable)
+      .where(eq(habitsTable.id, id))
+      .limit(1)
+      .then(([habit]) => habit);
   }
 
   async findOne(userId: string, id: string) {
