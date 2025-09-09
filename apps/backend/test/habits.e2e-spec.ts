@@ -6,16 +6,18 @@ import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
-import { loginUser, userIds } from './utils/auth.utils';
+import { loginUser } from './utils/auth.utils';
 import {
   cleanupDb,
-  DbUtils,
+  createAdmin,
   createUser,
+  DbUtils,
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
 import { habitsTable } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
+import { UserDto } from '@/users/dto/user.dto';
 
 type CreateHabitDto = typeof habitsTable.$inferInsert;
 
@@ -37,6 +39,8 @@ describe('HabitsController (e2e)', () => {
   let dbUtils: DbUtils;
   let adminCookies: string[];
   let userCookies: string[];
+  let admin: UserDto;
+  let user: UserDto;
 
   beforeAll(async () => {
     dbUtils = await setupTestDb();
@@ -56,16 +60,8 @@ describe('HabitsController (e2e)', () => {
   beforeEach(async () => {
     await truncateAllTables(dbUtils);
 
-    await createUser(dbUtils, {
-      id: userIds.admin,
-      email: 'admin@test.com',
-      role: 'admin',
-    });
-    await createUser(dbUtils, {
-      id: userIds.user,
-      email: 'user@test.com',
-      role: 'user',
-    });
+    admin = await createAdmin(dbUtils);
+    user = await createUser(dbUtils);
 
     adminCookies = await loginUser(app, { email: 'admin@test.com' });
     userCookies = await loginUser(app, { email: 'user@test.com' });
@@ -91,7 +87,7 @@ describe('HabitsController (e2e)', () => {
 
       const body = response.body as HabitDto;
       expect(body.name).toBe(createHabitDto.name);
-      expect(body.userId).toBe(userIds.user);
+      expect(body.userId).toBe(user.id);
     });
 
     it('should return 401 if not authenticated', async () => {
@@ -105,8 +101,8 @@ describe('HabitsController (e2e)', () => {
   describe('/habits/mine (GET)', () => {
     it('should return only the habits for the current user', async () => {
       await dbUtils.db.insert(habitsTable).values([
-        { name: 'user habit', userId: userIds.user },
-        { name: 'admin habit', userId: userIds.admin },
+        { name: 'user habit', userId: user.id },
+        { name: 'admin habit', userId: admin.id },
       ]);
 
       const response = await request(app.getHttpServer())
@@ -127,8 +123,8 @@ describe('HabitsController (e2e)', () => {
   describe('/habits (GET)', () => {
     it('should return all habits for an admin user', async () => {
       await dbUtils.db.insert(habitsTable).values([
-        { name: 'user habit', userId: userIds.user },
-        { name: 'admin habit', userId: userIds.admin },
+        { name: 'user habit', userId: user.id },
+        { name: 'admin habit', userId: admin.id },
       ]);
 
       const response = await request(app.getHttpServer())
@@ -152,7 +148,7 @@ describe('HabitsController (e2e)', () => {
     it('should return a specific habit by id if it belongs to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'test habit',
-        userId: userIds.user,
+        userId: user.id,
       });
 
       const response = await request(app.getHttpServer())
@@ -166,7 +162,7 @@ describe('HabitsController (e2e)', () => {
     it('should return 404 if the habit does not belong to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'admin habit',
-        userId: userIds.admin,
+        userId: admin.id,
       });
 
       await request(app.getHttpServer())
@@ -178,7 +174,7 @@ describe('HabitsController (e2e)', () => {
     it('should allow an admin to get any habit by id', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'user habit',
-        userId: userIds.user,
+        userId: user.id,
       });
 
       await request(app.getHttpServer())
@@ -192,7 +188,7 @@ describe('HabitsController (e2e)', () => {
     it('should update a habit if it belongs to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'old name',
-        userId: userIds.user,
+        userId: user.id,
       });
       const updateDto = { name: 'new name' };
 
@@ -208,7 +204,7 @@ describe('HabitsController (e2e)', () => {
     it('should return 404 if trying to update a habit that does not belong to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'admin habit',
-        userId: userIds.admin,
+        userId: admin.id,
       });
       const updateDto = { name: 'new name' };
 
@@ -224,7 +220,7 @@ describe('HabitsController (e2e)', () => {
     it('should delete a habit if it belongs to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'to delete',
-        userId: userIds.user,
+        userId: user.id,
       });
 
       await request(app.getHttpServer())
@@ -242,7 +238,7 @@ describe('HabitsController (e2e)', () => {
     it('should return 404 if trying to delete a habit that does not belong to the user', async () => {
       const habit = await insertHabit(dbUtils, {
         name: 'admin habit',
-        userId: userIds.admin,
+        userId: admin.id,
       });
 
       await request(app.getHttpServer())

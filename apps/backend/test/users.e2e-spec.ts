@@ -6,11 +6,13 @@ import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
 import { AppModule } from '../src/app.module';
-import { loginUser, userIds } from './utils/auth.utils';
+import { loginUser, mockUser } from './utils/auth.utils';
 import {
   cleanupDb,
-  DbUtils,
+  createAdmin,
   createUser,
+  createUser2,
+  DbUtils,
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
@@ -37,11 +39,7 @@ describe('UsersController (e2e)', () => {
 
   beforeEach(async () => {
     await truncateAllTables(dbUtils);
-    await createUser(dbUtils, {
-      id: userIds.admin,
-      email: 'admin@test.com',
-      role: 'admin',
-    });
+    await createAdmin(dbUtils);
 
     authCookies = await loginUser(app, { email: 'admin@test.com' });
   });
@@ -53,14 +51,8 @@ describe('UsersController (e2e)', () => {
 
   describe('/users (GET)', () => {
     it('should return all users for an admin', async () => {
-      // Arrange
-      await createUser(dbUtils, {
-        id: userIds.user,
-        email: 'user@test.com',
-        role: 'user',
-      });
+      await createUser(dbUtils);
 
-      // Act & Assert
       const response = await request(app.getHttpServer())
         .get('/users')
         .set('Cookie', authCookies)
@@ -82,11 +74,7 @@ describe('UsersController (e2e)', () => {
 
     it('should return 403 for a non-admin user', async () => {
       // Arrange
-      await createUser(dbUtils, {
-        id: userIds.user,
-        email: 'user@test.com',
-        role: 'user',
-      });
+      await createUser(dbUtils);
       const userCookies = await loginUser(app, { email: 'user@test.com' });
 
       // Act & Assert
@@ -100,40 +88,32 @@ describe('UsersController (e2e)', () => {
   describe('/users/:id (GET)', () => {
     it('should return a specific user by id', async () => {
       // Arrange
-      const [newUser] = await createUser(dbUtils, {
-        id: userIds.user2,
-        email: 'user2@test.com',
-        role: 'user',
-      });
-
-      if (!newUser) {
-        fail('Failed to create user');
-      }
+      const newUser2 = await createUser2(dbUtils);
 
       // Act & Assert
       const response = await request(app.getHttpServer())
-        .get(`/users/${newUser.id}`)
+        .get(`/users/${newUser2.id}`)
         .set('Cookie', authCookies)
         .expect(200);
 
       const body = response.body as UserDto;
 
-      expect(body.id).toBe(newUser.id);
-      expect(body.email).toBe(newUser.email);
+      expect(body.id).toBe(newUser2.id);
+      expect(body.email).toBe(newUser2.email);
       // @ts-expect-error verifying password is not returned
       expect(body.password).toBeUndefined();
     });
 
     it('should return 404 if user not found', async () => {
       await request(app.getHttpServer())
-        .get(`/users/${userIds.user}`)
+        .get(`/users/${mockUser.id}`)
         .set('Cookie', authCookies)
         .expect(404);
     });
 
     it('should return 401 if not authenticated', async () => {
       await request(app.getHttpServer())
-        .get(`/users/${userIds.user}`)
+        .get(`/users/${mockUser.id}`)
         .expect(401);
     });
   });

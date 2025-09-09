@@ -2,10 +2,22 @@ import { INestApplication } from '@nestjs/common';
 import request from 'supertest';
 import { App } from 'supertest/types';
 
-export const userIds = {
-  admin: '36782f66-2655-4ec9-a239-1a6ff022fef8',
-  user: '36782f66-2655-4ec9-a239-1a6ff022fef9',
-  user2: '36782f66-2655-4ec9-a239-1a6ff022fefa',
+export const mockAdmin = {
+  id: '36782f66-2655-4ec9-a239-1a6ff022fef8',
+  email: 'admin@test.com',
+  role: 'admin',
+};
+
+export const mockUser = {
+  id: '36782f66-2655-4ec9-a239-1a6ff022fef9',
+  email: 'user@test.com',
+  role: 'user',
+};
+
+export const mockUser2 = {
+  id: '36782f66-2655-4ec9-a239-1a6ff022fefa',
+  email: 'user2@test.com',
+  role: 'user',
 };
 
 export const mockPassword = 'passwordA123!';
