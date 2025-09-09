@@ -1,92 +1,146 @@
+import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { UserDto } from '@/users/dto/user.dto';
 import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import cookieParser from 'cookie-parser';
 import request from 'supertest';
-import { UsersService } from '../src/users/users.service';
 import { App } from 'supertest/types';
-import { mockUsers, mockUsersService } from './mocks/mock-users-service';
-import { createTestingModule } from './utils/createTestingModule';
+import { AppModule } from '../src/app.module';
+import { loginUser } from './utils/auth.utils';
+import {
+  cleanupDb,
+  DbUtils,
+  seedUser,
+  setupTestDb,
+  truncateAllTables,
+} from './utils/db.utils';
 
-async function createUsersTestingModule(
-  authenticated = true,
-  authorized = true,
-) {
-  return createTestingModule(
-    UsersService,
-    mockUsersService,
-    authenticated,
-    authorized,
-  );
-}
+const userIds = {
+  admin: '36782f66-2655-4ec9-a239-1a6ff022fef8',
+  user: '36782f66-2655-4ec9-a239-1a6ff022fef9',
+  user2: '36782f66-2655-4ec9-a239-1a6ff022fefa',
+};
 
-describe('UsersController (integration, mock Drizzle)', () => {
+describe('UsersController (e2e)', () => {
   let app: INestApplication<App>;
+  let dbUtils: DbUtils;
+  let authCookies: string[];
 
   beforeAll(async () => {
-    const moduleFixture = await createUsersTestingModule();
+    dbUtils = await setupTestDb();
+
+    const moduleFixture: TestingModule = await Test.createTestingModule({
+      imports: [AppModule],
+    })
+      .overrideProvider(DRIZZLE_PROVIDER)
+      .useValue(dbUtils.db)
+      .compile();
+
     app = moduleFixture.createNestApplication();
+    app.use(cookieParser());
     await app.init();
   });
 
+  beforeEach(async () => {
+    await truncateAllTables(dbUtils);
+    await seedUser(dbUtils, {
+      id: userIds.admin,
+      email: 'admin@test.com',
+      role: 'admin',
+    });
+
+    authCookies = await loginUser(app, { email: 'admin@test.com' });
+  });
+
   afterAll(async () => {
+    await cleanupDb(dbUtils);
     await app.close();
   });
 
-  it('/users (GET) should return all users', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/users')
-      .expect(200);
-    expect(response.body).toEqual(mockUsers);
-  });
+  describe('/users (GET)', () => {
+    it('should return all users for an admin', async () => {
+      // Arrange
+      await seedUser(dbUtils, {
+        id: userIds.user,
+        email: 'user@test.com',
+        role: 'user',
+      });
 
-  it('/users/:id (GET) should return one user', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/users/1')
-      .expect(200);
-    expect(response.body).toEqual(mockUsers[0]);
-  });
+      // Act & Assert
+      const response = await request(app.getHttpServer())
+        .get('/users')
+        .set('Cookie', authCookies)
+        .expect(200);
 
-  it('/users/:id (GET) should return 404 if not found', async () => {
-    const response = await request(app.getHttpServer())
-      .get('/users/10')
-      .expect(404);
-    expect(response.body).toMatchObject({
-      error: 'Not Found',
-      statusCode: 404,
+      const body = response.body as UserDto[];
+
+      expect(body).toBeInstanceOf(Array);
+      expect(body.length).toBe(2);
+      expect(body.find((u) => u.email === 'admin@test.com')).toBeDefined();
+      expect(body.find((u) => u.email === 'user@test.com')).toBeDefined();
+      // @ts-expect-error verifying password is not returned
+      expect(body[0]?.password).toBeUndefined();
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await request(app.getHttpServer()).get('/users').expect(401);
+    });
+
+    it('should return 403 for a non-admin user', async () => {
+      // Arrange
+      await seedUser(dbUtils, {
+        id: userIds.user,
+        email: 'user@test.com',
+        role: 'user',
+      });
+      const userCookies = await loginUser(app, { email: 'user@test.com' });
+
+      // Act & Assert
+      await request(app.getHttpServer())
+        .get('/users')
+        .set('Cookie', userCookies)
+        .expect(403);
     });
   });
 
-  it('/users/:id (GET) should return 401 if not authenticated', async () => {
-    const moduleFixture = await createUsersTestingModule(false);
+  describe('/users/:id (GET)', () => {
+    it('should return a specific user by id', async () => {
+      // Arrange
+      const [newUser] = await seedUser(dbUtils, {
+        id: userIds.user2,
+        email: 'user2@test.com',
+        role: 'user',
+      });
 
-    const currentApp: INestApplication<App> =
-      moduleFixture.createNestApplication();
-    await currentApp.init();
+      if (!newUser) {
+        fail('Failed to create user');
+      }
 
-    const response = await request(currentApp.getHttpServer())
-      .get('/users/1')
-      .expect(401);
-    expect(response.body).toMatchObject({
-      error: 'Unauthorized',
-      statusCode: 401,
+      // Act & Assert
+      const response = await request(app.getHttpServer())
+        .get(`/users/${newUser.id}`)
+        .set('Cookie', authCookies)
+        .expect(200);
+
+      const body = response.body as UserDto;
+
+      expect(body.id).toBe(newUser.id);
+      expect(body.email).toBe(newUser.email);
+      // @ts-expect-error verifying password is not returned
+      expect(body.password).toBeUndefined();
     });
 
-    await currentApp.close();
-  });
-
-  it('/users/:id (GET) should return 403 if not authorized', async () => {
-    const moduleFixture = await createUsersTestingModule(true, false);
-
-    const currentApp: INestApplication<App> =
-      moduleFixture.createNestApplication();
-    await currentApp.init();
-
-    const response = await request(currentApp.getHttpServer())
-      .get('/users/1')
-      .expect(403);
-    expect(response.body).toMatchObject({
-      error: 'Forbidden',
-      statusCode: 403,
+    it('should return 404 if user not found', async () => {
+      await request(app.getHttpServer())
+        .get(`/users/${userIds.user}`)
+        .set('Cookie', authCookies)
+        .expect(404);
     });
 
-    await currentApp.close();
+    it('should return 401 if not authenticated', async () => {
+      await request(app.getHttpServer())
+        .get(`/users/${userIds.user}`)
+        .expect(401);
+    });
   });
 });

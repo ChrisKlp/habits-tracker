@@ -25,6 +25,15 @@ export default tseslint.config(
     },
   },
   {
+    files: ['test/**/*.mjs'], // Now lint .mjs files in test directory
+    languageOptions: {
+      parserOptions: {
+        // Disable projectService for plain JS files
+        projectService: false,
+      },
+    },
+  },
+  {
     rules: {
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-floating-promises': 'warn',

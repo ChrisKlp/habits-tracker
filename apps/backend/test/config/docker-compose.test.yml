@@ -1,0 +1,17 @@
+services:
+  test-db:
+    image: postgres:17
+    container_name: habits-tracker-test-db
+    environment:
+      POSTGRES_DB: habits-tracker-test
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+    ports:
+      - '5433:5432'
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U test -d habits-tracker-test']
+      interval: 5s
+      timeout: 5s
+      retries: 5

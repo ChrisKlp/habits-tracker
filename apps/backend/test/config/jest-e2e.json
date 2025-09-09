@@ -4,13 +4,16 @@
     "json",
     "ts"
   ],
-  "rootDir": ".",
+  "rootDir": "../..",
   "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
   "transform": {
     "^.+\\.(t|j)s$": "ts-jest"
   },
+  "globalSetup": "<rootDir>/test/config/global-setup.mjs",
+  "globalTeardown": "<rootDir>/test/config/global-teardown.mjs",
+  "testTimeout": 30000,
   "moduleNameMapper": {
-    "^@/(.*)$": "<rootDir>/../src/$1"
+    "^@/(.*)$": "<rootDir>/src/$1"
   }
 }

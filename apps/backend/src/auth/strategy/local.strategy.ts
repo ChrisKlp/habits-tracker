@@ -9,8 +9,9 @@ import { AuthService } from '../auth.service';
 export class LocalStrategy extends PassportStrategy(Strategy, 'local') {
   constructor(private moduleRef: ModuleRef) {
     super({
-      passReqToCallback: true,
       usernameField: 'email',
+      passwordField: 'password',
+      passReqToCallback: true,
     });
   }
 
