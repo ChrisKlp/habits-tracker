@@ -66,7 +66,7 @@ export class HabitsService {
     }
   }
 
-  async update(userId: string, id: string, updateHabitDto: UpdateHabitDto) {
+  async update(id: string, updateHabitDto: UpdateHabitDto, userId: string) {
     const [habit] = await this.db
       .update(habitsTable)
       .set(updateHabitDto)
@@ -80,7 +80,7 @@ export class HabitsService {
     return habit;
   }
 
-  async remove(userId: string, id: string) {
+  async remove(id: string, userId: string) {
     const [habit] = await this.db
       .delete(habitsTable)
       .where(and(eq(habitsTable.id, id), eq(habitsTable.userId, userId)))

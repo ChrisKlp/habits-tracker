@@ -43,7 +43,7 @@ export class HabitsController {
     @Param('id') id: string,
     @Body() updateHabitDto: UpdateHabitDto,
   ): Promise<HabitDto> {
-    return this.habitsService.update(user.userId, id, updateHabitDto);
+    return this.habitsService.update(id, updateHabitDto, user.userId);
   }
 
   @Delete(':id')
@@ -51,6 +51,6 @@ export class HabitsController {
     @CurrentUser() user: ValidateUser,
     @Param('id') id: string,
   ): Promise<HabitDto> {
-    return this.habitsService.remove(user.userId, id);
+    return this.habitsService.remove(id, user.userId);
   }
 }
