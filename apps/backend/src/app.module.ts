@@ -11,6 +11,7 @@ import { DrizzleExceptionFilter } from './common/filters/drizzle-exception.filte
 import { RolesGuard } from './common/guards/roles.guard';
 import { HabitsModule } from './habits/habits.module';
 import { SeedService } from './drizzle/seed.service';
+import { HabitLogsModule } from './habit-logs/habit-logs.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { SeedService } from './drizzle/seed.service';
     UsersModule,
     AuthModule,
     HabitsModule,
+    HabitLogsModule,
   ],
   controllers: [],
   providers: [

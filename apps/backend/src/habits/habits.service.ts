@@ -49,12 +49,11 @@ export class HabitsService {
         conditions.push(eq(habitsTable.userId, user.userId));
       }
 
-      const habit = await this.db
+      const [habit] = await this.db
         .select()
         .from(habitsTable)
         .where(and(...conditions))
-        .limit(1)
-        .then(([habit]) => habit);
+        .limit(1);
 
       if (!habit) {
         throw new NotFoundException();

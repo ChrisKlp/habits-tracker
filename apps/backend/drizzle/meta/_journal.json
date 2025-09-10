@@ -22,6 +22,13 @@
       "when": 1756129696833,
       "tag": "0002_green_the_enforcers",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1757500692942,
+      "tag": "0003_steady_black_bird",
+      "breakpoints": true
     }
   ]
 }
