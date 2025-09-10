@@ -1,51 +1,58 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateHabitDto, UpdateHabitDto } from './dto/habit.dto';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { habitsTable } from '@/drizzle/schema';
 import { and, eq } from 'drizzle-orm';
+import { ValidateUser } from '@/types';
 
 @Injectable()
 export class HabitsService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
   async create(userId: string, createHabitDto: CreateHabitDto) {
-    return this.db
+    const [habit] = await this.db
       .insert(habitsTable)
       .values({
         ...createHabitDto,
         userId,
       })
-      .returning()
-      .then(([habit]) => habit);
+      .returning();
+
+    if (!habit) {
+      throw new BadRequestException('Could not create habit with given data');
+    }
+
+    return habit;
   }
 
-  async findAll() {
+  async findAllAsAdmin() {
     return this.db.select().from(habitsTable);
   }
 
-  async findMyHabits(userId: string) {
+  async findAll(userId: string) {
     return this.db
       .select()
       .from(habitsTable)
       .where(eq(habitsTable.userId, userId));
   }
 
-  async findOneAsAdmin(id: string) {
-    return this.db
-      .select()
-      .from(habitsTable)
-      .where(eq(habitsTable.id, id))
-      .limit(1)
-      .then(([habit]) => habit);
-  }
-
-  async findOne(userId: string, id: string) {
+  async findOne(id: string, user: ValidateUser) {
     try {
+      const conditions = [eq(habitsTable.id, id)];
+
+      if (user && user.role !== 'admin') {
+        conditions.push(eq(habitsTable.userId, user.userId));
+      }
+
       const habit = await this.db
         .select()
         .from(habitsTable)
-        .where(and(eq(habitsTable.userId, userId), eq(habitsTable.id, id)))
+        .where(and(...conditions))
         .limit(1)
         .then(([habit]) => habit);
 

@@ -106,7 +106,7 @@ describe('HabitsController (e2e)', () => {
       ]);
 
       const response = await request(app.getHttpServer())
-        .get('/habits/my')
+        .get('/habits')
         .set('Cookie', userCookies)
         .expect(200);
 
@@ -128,7 +128,7 @@ describe('HabitsController (e2e)', () => {
       ]);
 
       const response = await request(app.getHttpServer())
-        .get('/habits')
+        .get('/admin/habits')
         .set('Cookie', adminCookies)
         .expect(200);
 
@@ -138,7 +138,7 @@ describe('HabitsController (e2e)', () => {
 
     it('should return 403 for a non-admin user', async () => {
       await request(app.getHttpServer())
-        .get('/habits')
+        .get('/admin/habits')
         .set('Cookie', userCookies)
         .expect(403);
     });
@@ -178,7 +178,7 @@ describe('HabitsController (e2e)', () => {
       });
 
       await request(app.getHttpServer())
-        .get(`/habits/admin/${habit.id}`)
+        .get(`/admin/habits/${habit.id}`)
         .set('Cookie', adminCookies)
         .expect(200);
     });

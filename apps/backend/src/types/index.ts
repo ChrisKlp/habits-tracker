@@ -7,5 +7,5 @@ export interface JwtPayload {
 
 export interface ValidateUser {
   userId: string;
-  role: string;
+  role: 'user' | 'admin';
 }
