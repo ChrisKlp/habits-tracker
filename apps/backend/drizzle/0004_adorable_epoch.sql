@@ -1,0 +1,1 @@
+ALTER TABLE "habit_logs" ALTER COLUMN "value" SET DEFAULT 0;

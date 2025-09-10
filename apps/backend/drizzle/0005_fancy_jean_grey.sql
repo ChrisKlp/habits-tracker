@@ -1,0 +1,1 @@
+ALTER TABLE "habit_logs" ALTER COLUMN "date" SET DATA TYPE date;

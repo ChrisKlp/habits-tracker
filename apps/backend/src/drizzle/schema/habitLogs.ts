@@ -1,12 +1,12 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { integer, pgTable, timestamp, uuid, date } from 'drizzle-orm/pg-core';
 import { habitsTable } from './habits';
 import { usersTable } from './users';
 
 export const habitLogsTable = pgTable('habit_logs', {
   id: uuid('id').primaryKey().defaultRandom(),
-  date: timestamp('date', { withTimezone: true }).notNull(),
-  value: integer('value').default(1).notNull(),
+  date: date('date').notNull(),
+  value: integer('value').default(0).notNull(),
 
   habitId: uuid('habit_id')
     .notNull()

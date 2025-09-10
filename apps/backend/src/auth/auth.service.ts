@@ -82,7 +82,7 @@ export class AuthService {
         throw new UnauthorizedException('Credentials are not valid');
       }
 
-      return { userId: user.id, role: user.role };
+      return { userId: user.id, role: user.role as 'user' | 'admin' };
     } catch {
       throw new UnauthorizedException('Credentials are not valid');
     }
@@ -96,7 +96,7 @@ export class AuthService {
       const user = await this.usersService.findOne(userId);
       await this.sessionService.validateSession(userId, refreshToken);
 
-      return { userId: user.id, role: user.role };
+      return { userId: user.id, role: user.role as 'user' | 'admin' };
     } catch {
       throw new UnauthorizedException('Refresh token is not valid.');
     }

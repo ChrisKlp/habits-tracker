@@ -9,10 +9,12 @@ import { createZodDto } from 'nestjs-zod';
 const habitLogSelectSchema = createSelectSchema(habitLogsTable);
 const habitLogInsertSchema = createInsertSchema(habitLogsTable).omit({
   id: true,
+  userId: true,
   createdAt: true,
 });
 const habitLogUpdateSchema = createUpdateSchema(habitLogsTable).omit({
   id: true,
+  userId: true,
   createdAt: true,
 });
 

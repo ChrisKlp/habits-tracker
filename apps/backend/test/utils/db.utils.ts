@@ -3,16 +3,21 @@ import { Pool } from 'pg';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import path from 'path';
-import schema from '../../src/drizzle/schema';
+import schema, { habitLogsTable, habitsTable } from '../../src/drizzle/schema';
 import { hashValue } from '../../src/auth/utils/hash';
 import { mockAdmin, mockPassword, mockUser, mockUser2 } from './auth.utils';
+import { HabitDto } from '@/habits/dto/habit.dto';
+import { HabitLogDto } from '@/habit-logs/dto/habit-log.dto';
+
+type CreateHabitDto = typeof habitsTable.$inferInsert;
+type CreateHabitLogDto = typeof habitLogsTable.$inferInsert;
 
 export type DbUtils = {
   db: NodePgDatabase<typeof schema>;
   pool: Pool;
 };
 
-export const setupTestDb = async (): Promise<DbUtils> => {
+export async function setupTestDb(): Promise<DbUtils> {
   const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
   });
@@ -23,21 +28,21 @@ export const setupTestDb = async (): Promise<DbUtils> => {
   });
 
   return { db, pool };
-};
+}
 
-export const truncateAllTables = async ({ db }: Pick<DbUtils, 'db'>) => {
+export async function truncateAllTables({ db }: Pick<DbUtils, 'db'>) {
   const tableNames = Object.values(schema)
     .filter((o) => isTable(o))
     .map((o) => getTableName(o));
   for (const tableName of tableNames) {
     await db.execute(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`);
   }
-};
+}
 
-export const cleanupDb = async ({ db, pool }: DbUtils) => {
+export async function cleanupDb({ db, pool }: DbUtils) {
   await truncateAllTables({ db });
   await pool.end();
-};
+}
 
 type CreateUserDto = Omit<typeof schema.usersTable.$inferInsert, 'password'> & {
   password?: string;
@@ -91,4 +96,36 @@ export async function findUserByEmail(
   }
 
   return user;
+}
+
+export async function insertHabit(
+  { db }: Pick<DbUtils, 'db'>,
+  habit: CreateHabitDto,
+): Promise<HabitDto> {
+  const [newHabit] = await db.insert(habitsTable).values(habit).returning();
+
+  if (!newHabit) {
+    throw new Error('Failed to create habit');
+  }
+
+  return newHabit;
+}
+
+export async function insertHabitLog(
+  { db }: Pick<DbUtils, 'db'>,
+  habitLog: Omit<CreateHabitLogDto, 'date'> & { date?: string },
+): Promise<HabitLogDto> {
+  const [newHabitLog] = await db
+    .insert(habitLogsTable)
+    .values({
+      ...habitLog,
+      date: habitLog.date ?? new Date().toISOString(),
+    })
+    .returning();
+
+  if (!newHabitLog) {
+    throw new Error('Failed to create habit log');
+  }
+
+  return newHabitLog;
 }

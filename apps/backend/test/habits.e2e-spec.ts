@@ -12,27 +12,13 @@ import {
   createAdmin,
   createUser,
   DbUtils,
+  insertHabit,
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
 import { habitsTable } from '@/drizzle/schema';
 import { eq } from 'drizzle-orm';
 import { UserDto } from '@/users/dto/user.dto';
-
-type CreateHabitDto = typeof habitsTable.$inferInsert;
-
-const insertHabit = async (
-  { db }: Pick<DbUtils, 'db'>,
-  habit: CreateHabitDto,
-) => {
-  const [newHabit] = await db.insert(habitsTable).values(habit).returning();
-
-  if (!newHabit) {
-    throw new Error('Failed to create habit');
-  }
-
-  return newHabit;
-};
 
 describe('HabitsController (e2e)', () => {
   let app: INestApplication<App>;

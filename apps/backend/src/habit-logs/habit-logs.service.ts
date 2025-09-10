@@ -7,7 +7,7 @@ import { CreateHabitLogDto, UpdateHabitLogDto } from './dto/habit-log.dto';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { habitLogsTable, habitsTable } from '@/drizzle/schema';
-import { and, desc, eq, getTableColumns, gte, lt, SQL } from 'drizzle-orm';
+import { and, desc, eq, getTableColumns, SQL } from 'drizzle-orm';
 import { ValidateUser } from '@/types';
 
 interface FindAllFilters {
@@ -20,10 +20,10 @@ interface FindAllFilters {
 export class HabitLogsService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
-  async create(createHabitLogDto: CreateHabitLogDto) {
+  async create(createHabitLogDto: CreateHabitLogDto, userId: string) {
     return this.db
       .insert(habitLogsTable)
-      .values(createHabitLogDto)
+      .values({ ...createHabitLogDto, userId })
       .returning()
       .then(([habitLog]) => habitLog);
   }
@@ -44,15 +44,7 @@ export class HabitLogsService {
     }
 
     if (date) {
-      const startOfDay = new Date(date);
-      startOfDay.setHours(0, 0, 0, 0);
-
-      const nextDay = new Date(date);
-      nextDay.setDate(nextDay.getDate() + 1);
-      nextDay.setHours(0, 0, 0, 0);
-
-      conditions.push(gte(habitLogsTable.date, startOfDay));
-      conditions.push(lt(habitLogsTable.date, nextDay));
+      conditions.push(eq(habitLogsTable.date, date));
     }
 
     return this.db
@@ -113,7 +105,7 @@ export class HabitLogsService {
   ) {
     const [habitLog] = await this.db
       .update(habitLogsTable)
-      .set(updateHabitLogDto)
+      .set({ ...updateHabitLogDto, userId })
       .where(and(eq(habitLogsTable.id, id), eq(habitLogsTable.userId, userId)))
       .returning();
 

@@ -23,8 +23,11 @@ export class HabitLogsController {
   constructor(private readonly habitLogsService: HabitLogsService) {}
 
   @Post()
-  async create(@Body() createHabitLogDto: CreateHabitLogDto) {
-    return this.habitLogsService.create(createHabitLogDto);
+  async create(
+    @CurrentUser() user: ValidateUser,
+    @Body() createHabitLogDto: CreateHabitLogDto,
+  ) {
+    return this.habitLogsService.create(createHabitLogDto, user.userId);
   }
 
   @Get()
