@@ -1,9 +1,12 @@
-import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
+import { pgTable, uuid, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { usersTable } from './users';
+import { idColumn, timestampColumns } from '../utils/commonColumns';
 
 export const sessionsTable = pgTable('sessions', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  ...idColumn,
+  ...timestampColumns,
+
   ip: text('ip').default('unknown'),
   location: text('location').default('unknown'),
   deviceOs: text('device_os').default('unknown'),
@@ -16,13 +19,6 @@ export const sessionsTable = pgTable('sessions', {
   userId: uuid('user_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
-
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .$onUpdate(() => new Date()),
 });
 
 export const sessionsRelations = relations(sessionsTable, ({ one }) => ({

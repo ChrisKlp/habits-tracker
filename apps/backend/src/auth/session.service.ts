@@ -17,7 +17,7 @@ export class SessionService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
   async addSession(userId: string, device: DeviceType, refreshToken: string) {
-    const now = new Date();
+    const now = new Date().toISOString();
 
     try {
       await this.db.transaction(async (trx) => {
@@ -38,7 +38,7 @@ export class SessionService {
         }
 
         await trx.insert(sessionsTable).values({
-          userId: userId,
+          userId,
           ip: device.ip,
           refreshToken: await hashValue(refreshToken),
           createdAt: now,

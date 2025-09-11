@@ -52,6 +52,15 @@
         "src/**/*.ts",
         "test/**/*.ts"
       ]
+    },
+    "generate:api": {
+      "cache": false,
+      "inputs": [
+        "openapi.json"
+      ],
+      "outputs": [
+        "src/api/**"
+      ]
     }
   }
 }

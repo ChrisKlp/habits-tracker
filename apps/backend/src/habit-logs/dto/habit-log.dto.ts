@@ -1,4 +1,5 @@
 import { habitLogsTable } from '@/drizzle/schema';
+import { habitSelectSchema } from '@/habits/dto/habit.dto';
 import {
   createInsertSchema,
   createSelectSchema,
@@ -18,6 +19,21 @@ const habitLogUpdateSchema = createUpdateSchema(habitLogsTable).omit({
   createdAt: true,
 });
 
+const habitLogWithHabitSchema = habitLogSelectSchema.extend({
+  habit: habitSelectSchema
+    .pick({
+      id: true,
+      name: true,
+      color: true,
+      icon: true,
+      archived: true,
+    })
+    .nullable(),
+});
+
 export class HabitLogDto extends createZodDto(habitLogSelectSchema) {}
 export class CreateHabitLogDto extends createZodDto(habitLogInsertSchema) {}
 export class UpdateHabitLogDto extends createZodDto(habitLogUpdateSchema) {}
+export class HabitLogWithHabitDto extends createZodDto(
+  habitLogWithHabitSchema,
+) {}

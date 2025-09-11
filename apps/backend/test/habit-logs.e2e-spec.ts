@@ -1,7 +1,10 @@
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
 import { habitLogsTable } from '@/drizzle/schema';
-import { CreateHabitLogDto, HabitLogDto } from '@/habit-logs/dto/habit-log.dto';
-import { HabitLogWithHabitDto } from '@/habit-logs/types';
+import {
+  CreateHabitLogDto,
+  HabitLogDto,
+  HabitLogWithHabitDto,
+} from '@/habit-logs/dto/habit-log.dto';
 import { HabitDto } from '@/habits/dto/habit.dto';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';

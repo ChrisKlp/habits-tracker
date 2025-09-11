@@ -1,10 +1,13 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, timestamp, uuid, date } from 'drizzle-orm/pg-core';
+import { integer, pgTable, uuid, date } from 'drizzle-orm/pg-core';
 import { habitsTable } from './habits';
 import { usersTable } from './users';
+import { idColumn, timestampColumns } from '../utils/commonColumns';
 
 export const habitLogsTable = pgTable('habit_logs', {
-  id: uuid('id').primaryKey().defaultRandom(),
+  ...idColumn,
+  ...timestampColumns,
+
   date: date('date').notNull(),
   value: integer('value').default(0).notNull(),
 
@@ -15,13 +18,6 @@ export const habitLogsTable = pgTable('habit_logs', {
   userId: uuid('user_id')
     .notNull()
     .references(() => usersTable.id, { onDelete: 'cascade' }),
-
-  createdAt: timestamp('created_at', { withTimezone: true })
-    .defaultNow()
-    .notNull(),
-  updatedAt: timestamp('updated_at', { withTimezone: true })
-    .notNull()
-    .$onUpdate(() => new Date()),
 });
 
 export const habitLogsRelations = relations(habitLogsTable, ({ one }) => ({

@@ -21,11 +21,16 @@ export class HabitLogsService {
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 
   async create(createHabitLogDto: CreateHabitLogDto, userId: string) {
-    return this.db
+    const [habitLog] = await this.db
       .insert(habitLogsTable)
       .values({ ...createHabitLogDto, userId })
-      .returning()
-      .then(([habitLog]) => habitLog);
+      .returning();
+
+    if (!habitLog) {
+      throw new BadRequestException('Could not create habit log');
+    }
+
+    return habitLog;
   }
 
   async findAll({ habitId, userId, date }: FindAllFilters) {

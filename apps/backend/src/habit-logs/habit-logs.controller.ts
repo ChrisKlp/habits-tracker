@@ -12,16 +12,18 @@ import { HabitLogsService } from './habit-logs.service';
 import {
   CreateHabitLogDto,
   HabitLogDto,
+  HabitLogWithHabitDto,
   UpdateHabitLogDto,
 } from './dto/habit-log.dto';
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { ValidateUser } from '@/types';
-import { HabitLogWithHabitDto } from './types';
+import { ZodResponse } from 'nestjs-zod';
 
 @Controller('habit-logs')
 export class HabitLogsController {
   constructor(private readonly habitLogsService: HabitLogsService) {}
 
+  @ZodResponse({ type: HabitLogDto })
   @Post()
   async create(
     @CurrentUser() user: ValidateUser,
@@ -29,13 +31,13 @@ export class HabitLogsController {
   ) {
     return this.habitLogsService.create(createHabitLogDto, user.userId);
   }
-
+  @ZodResponse({ type: [HabitLogWithHabitDto] })
   @Get()
   findAll(
     @CurrentUser() user: ValidateUser,
     @Query('habitId') habitId?: string,
     @Query('date') date?: string,
-  ): Promise<HabitLogWithHabitDto[]> {
+  ) {
     return this.habitLogsService.findAll({
       userId: user.userId,
       habitId,
@@ -43,23 +45,23 @@ export class HabitLogsController {
     });
   }
 
+  @ZodResponse({ type: HabitLogWithHabitDto })
   @Get(':id')
-  findOne(
-    @CurrentUser() user: ValidateUser,
-    @Param('id') id: string,
-  ): Promise<HabitLogWithHabitDto> {
+  findOne(@CurrentUser() user: ValidateUser, @Param('id') id: string) {
     return this.habitLogsService.findOne(id, user);
   }
 
+  @ZodResponse({ type: HabitLogDto })
   @Patch(':id')
   update(
     @CurrentUser() user: ValidateUser,
     @Param('id') id: string,
     @Body() updateHabitLogDto: UpdateHabitLogDto,
-  ): Promise<HabitLogDto> {
+  ) {
     return this.habitLogsService.update(id, updateHabitLogDto, user.userId);
   }
 
+  @ZodResponse({ type: HabitLogDto })
   @Delete(':id')
   remove(
     @CurrentUser() user: ValidateUser,

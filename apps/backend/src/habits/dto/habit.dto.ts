@@ -6,7 +6,7 @@ import {
 } from 'drizzle-zod';
 import { createZodDto } from 'nestjs-zod';
 
-const habitSelectSchema = createSelectSchema(habitsTable);
+export const habitSelectSchema = createSelectSchema(habitsTable);
 const habitInsertSchema = createInsertSchema(habitsTable).omit({
   id: true,
   userId: true,

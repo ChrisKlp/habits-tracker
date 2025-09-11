@@ -27,13 +27,11 @@ import { HabitLogsModule } from './habit-logs/habit-logs.module';
   ],
   controllers: [],
   providers: [
-    { provide: APP_GUARD, useExisting: JwtAuthGuard },
-    { provide: APP_GUARD, useExisting: RolesGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: RolesGuard },
     { provide: APP_PIPE, useClass: ZodValidationPipe },
     { provide: APP_FILTER, useClass: DrizzleExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },
-    JwtAuthGuard,
-    RolesGuard,
     SeedService,
   ],
 })

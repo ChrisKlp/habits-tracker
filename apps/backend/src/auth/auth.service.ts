@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -59,6 +60,10 @@ export class AuthService {
           password: await hashValue(registerDto.password),
         })
         .returning();
+
+      if (!user) {
+        throw new BadRequestException();
+      }
 
       return user;
     } catch {

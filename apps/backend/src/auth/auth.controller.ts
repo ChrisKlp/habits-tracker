@@ -18,6 +18,8 @@ import { Public } from '@/common/decorators/public.decorator';
 import type { ValidateUser } from '@/types';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { JwtRefreshAuthGuard } from '@/common/guards/jwt-refresh-auth.guard';
+import { ZodResponse } from 'nestjs-zod';
+import { UserDto } from '@/users/dto/user.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -45,6 +47,7 @@ export class AuthController {
     return this.authService.login(user, device, response);
   }
 
+  @ZodResponse({ type: UserDto })
   @Roles('admin')
   @Post('register')
   async register(@Body() registerDto: RegisterDto) {
