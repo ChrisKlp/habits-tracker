@@ -29,6 +29,13 @@
       "cache": false,
       "persistent": true
     },
+    "web#dev": {
+      "cache": false,
+      "persistent": true,
+      "dependsOn": [
+        "generate:api"
+      ]
+    },
     "db:setup": {
       "cache": false
     },
@@ -55,11 +62,16 @@
     },
     "generate:api": {
       "cache": false,
-      "inputs": [
-        "openapi.json"
+      "dependsOn": [
+        "backend#generate-openapi"
       ],
       "outputs": [
         "src/api/**"
+      ]
+    },
+    "generate-openapi": {
+      "outputs": [
+        "openapi.json"
       ]
     }
   }

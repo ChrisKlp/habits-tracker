@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint --max-warnings 0",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "generate:api": "openapi-typescript ../backend/openapi.json --output generated/openapi.ts"
   },
   "dependencies": {
     "next": "^15.5.0",
@@ -22,6 +23,7 @@
     "@types/react": "19.1.0",
     "@types/react-dom": "19.1.1",
     "eslint": "^9.33.0",
+    "openapi-typescript": "^7.3.0",
     "typescript": "5.9.2"
   }
 }
