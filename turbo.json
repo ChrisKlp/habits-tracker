@@ -33,7 +33,7 @@
       "cache": false,
       "persistent": true,
       "dependsOn": [
-        "generate:api"
+        "web#generate:api"
       ]
     },
     "db:setup": {
@@ -60,16 +60,16 @@
         "test/**/*.ts"
       ]
     },
-    "generate:api": {
+    "web#generate:api": {
       "cache": false,
       "dependsOn": [
-        "backend#generate-openapi"
+        "backend#generate:openapi"
       ],
       "outputs": [
         "src/api/**"
       ]
     },
-    "generate-openapi": {
+    "backend#generate:openapi": {
       "outputs": [
         "openapi.json"
       ]

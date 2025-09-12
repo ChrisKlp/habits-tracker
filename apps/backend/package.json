@@ -24,7 +24,7 @@
     "db:push": "drizzle-kit push",
     "db:setup": "pnpm db:generate && pnpm db:migrate",
     "db:studio": "drizzle-kit studio",
-    "generate-openapi": "ts-node -r tsconfig-paths/register scripts/generate-openapi.ts"
+    "generate:openapi": "ts-node -r tsconfig-paths/register scripts/generate-openapi.ts"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
