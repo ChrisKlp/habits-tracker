@@ -5,7 +5,6 @@ import { UsersModule } from './users/users.module';
 import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ZodSerializerInterceptor, ZodValidationPipe } from 'nestjs-zod';
 import { AuthModule } from './auth/auth.module';
-import { JwtModule } from '@nestjs/jwt';
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { DrizzleExceptionFilter } from './common/filters/drizzle-exception.filter';
 import { RolesGuard } from './common/guards/roles.guard';
@@ -16,9 +15,6 @@ import { HabitLogsModule } from './habit-logs/habit-logs.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    JwtModule.register({
-      global: true,
-    }),
     DrizzleModule,
     UsersModule,
     AuthModule,
