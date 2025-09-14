@@ -1,1 +1,1 @@
-export { default } from "@repo/prettier-config/backend";
+export { default } from '@repo/prettier-config/backend';
