@@ -9,10 +9,7 @@ export const hashValue = async (password: string) => {
   });
 };
 
-export const validateValue = async (
-  plainPassword: string,
-  hashedPassword: string,
-) => {
+export const validateValue = async (plainPassword: string, hashedPassword: string) => {
   try {
     return argon2.verify(hashedPassword, plainPassword);
   } catch (e) {

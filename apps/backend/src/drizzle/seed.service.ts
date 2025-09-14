@@ -1,11 +1,12 @@
-// src/database/seed.service.ts
-import { Injectable, OnModuleInit, Logger } from '@nestjs/common';
-import { usersTable } from './schema';
-import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { eq } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
 import { hashValue } from '@/auth/utils/hash';
+import { Drizzle } from '@/common/decorators/drizzle.decorator';
+
+import { usersTable } from './schema';
 
 @Injectable()
 export class SeedService implements OnModuleInit {
@@ -13,7 +14,7 @@ export class SeedService implements OnModuleInit {
 
   constructor(
     @Drizzle() private readonly db: NodePgDatabase,
-    private readonly config: ConfigService,
+    private readonly config: ConfigService
   ) {}
 
   async onModuleInit() {

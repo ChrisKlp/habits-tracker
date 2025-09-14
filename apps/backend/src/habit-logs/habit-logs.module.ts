@@ -1,7 +1,8 @@
 import { Module } from '@nestjs/common';
-import { HabitLogsService } from './habit-logs.service';
-import { HabitLogsController } from './habit-logs.controller';
+
 import { AdminHabitLogsController } from './admin-habit-logs.controller';
+import { HabitLogsController } from './habit-logs.controller';
+import { HabitLogsService } from './habit-logs.service';
 
 @Module({
   controllers: [HabitLogsController, AdminHabitLogsController],

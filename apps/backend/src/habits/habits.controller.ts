@@ -1,17 +1,11 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
-import { HabitsService } from './habits.service';
-import { CreateHabitDto, HabitDto, UpdateHabitDto } from './dto/habit.dto';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { ZodResponse } from 'nestjs-zod';
+
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import type { ValidateUser } from '@/types';
-import { ZodResponse } from 'nestjs-zod';
+
+import { CreateHabitDto, HabitDto, UpdateHabitDto } from './dto/habit.dto';
+import { HabitsService } from './habits.service';
 
 @Controller('habits')
 export class HabitsController {
@@ -19,10 +13,7 @@ export class HabitsController {
 
   @ZodResponse({ type: HabitDto })
   @Post()
-  async create(
-    @CurrentUser() user: ValidateUser,
-    @Body() createHabitDto: CreateHabitDto,
-  ) {
+  async create(@CurrentUser() user: ValidateUser, @Body() createHabitDto: CreateHabitDto) {
     return this.habitsService.create(user.userId, createHabitDto);
   }
 
@@ -41,7 +32,7 @@ export class HabitsController {
   async update(
     @CurrentUser() user: ValidateUser,
     @Param('id') id: string,
-    @Body() updateHabitDto: UpdateHabitDto,
+    @Body() updateHabitDto: UpdateHabitDto
   ) {
     return this.habitsService.update(id, updateHabitDto, user.userId);
   }

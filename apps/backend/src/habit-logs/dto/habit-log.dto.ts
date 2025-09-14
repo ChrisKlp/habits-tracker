@@ -1,11 +1,8 @@
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
+import { createZodDto } from 'nestjs-zod';
+
 import { habitLogsTable } from '@/drizzle/schema';
 import { habitSelectSchema } from '@/habits/dto/habit.dto';
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from 'drizzle-zod';
-import { createZodDto } from 'nestjs-zod';
 
 const habitLogSelectSchema = createSelectSchema(habitLogsTable);
 const habitLogInsertSchema = createInsertSchema(habitLogsTable).omit({
@@ -34,6 +31,4 @@ const habitLogWithHabitSchema = habitLogSelectSchema.extend({
 export class HabitLogDto extends createZodDto(habitLogSelectSchema) {}
 export class CreateHabitLogDto extends createZodDto(habitLogInsertSchema) {}
 export class UpdateHabitLogDto extends createZodDto(habitLogUpdateSchema) {}
-export class HabitLogWithHabitDto extends createZodDto(
-  habitLogWithHabitSchema,
-) {}
+export class HabitLogWithHabitDto extends createZodDto(habitLogWithHabitSchema) {}

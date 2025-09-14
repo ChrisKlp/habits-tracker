@@ -1,9 +1,14 @@
-import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
+
+import { RegisterDto } from '@/auth/dto/register.dto';
+import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { ValidateUser } from '@/types';
+import { UserDto } from '@/users/dto/user.dto';
+
 import { AppModule } from '../src/app.module';
 import { loginUser, mockPassword } from './utils/auth.utils';
 import {
@@ -15,9 +20,6 @@ import {
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
-import { RegisterDto } from '@/auth/dto/register.dto';
-import { UserDto } from '@/users/dto/user.dto';
-import { ValidateUser } from '@/types';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication<App>;
@@ -69,10 +71,7 @@ describe('AuthController (e2e)', () => {
       expect(createdUser).toBeDefined();
       expect(createdUser.email).toBe(newUserData.email);
 
-      const dbUser = (await findUserByEmail(
-        dbUtils,
-        newUserData.email,
-      )) as UserDto;
+      const dbUser = (await findUserByEmail(dbUtils, newUserData.email)) as UserDto;
       expect(dbUser).toBeDefined();
       expect(dbUser.email).toBe(newUserData.email);
     });
@@ -91,10 +90,7 @@ describe('AuthController (e2e)', () => {
     });
 
     it('should return 401 when not authenticated', async () => {
-      await request(app.getHttpServer())
-        .post('/auth/register')
-        .send(newUserData)
-        .expect(401);
+      await request(app.getHttpServer()).post('/auth/register').send(newUserData).expect(401);
     });
 
     it('should return 400 for invalid password', async () => {
@@ -111,10 +107,7 @@ describe('AuthController (e2e)', () => {
       };
 
       expect(
-        errors.some(
-          (error) =>
-            error.message === 'Password must be at least 8 characters long',
-        ),
+        errors.some(error => error.message === 'Password must be at least 8 characters long')
       ).toBe(true);
     });
 
@@ -145,9 +138,7 @@ describe('AuthController (e2e)', () => {
         fail('No cookies returned');
       }
 
-      expect(cookies.some((c: string) => c.startsWith('Authentication='))).toBe(
-        true,
-      );
+      expect(cookies.some((c: string) => c.startsWith('Authentication='))).toBe(true);
       expect(cookies.some((c: string) => c.startsWith('Refresh='))).toBe(true);
     });
 
@@ -180,9 +171,7 @@ describe('AuthController (e2e)', () => {
         fail('No cookies returned');
       }
 
-      expect(
-        cookies.some((c: string) => c.startsWith('Authentication=;')),
-      ).toBe(true);
+      expect(cookies.some((c: string) => c.startsWith('Authentication=;'))).toBe(true);
       expect(cookies.some((c: string) => c.startsWith('Refresh=;'))).toBe(true);
     });
 
@@ -207,17 +196,13 @@ describe('AuthController (e2e)', () => {
       if (!newCookies) {
         fail('No new cookies returned');
       }
-      expect(
-        newCookies.some((c: string) => c.startsWith('Authentication=')),
-      ).toBe(true);
-      expect(newCookies.some((c: string) => c.startsWith('Refresh='))).toBe(
-        true,
-      );
+      expect(newCookies.some((c: string) => c.startsWith('Authentication='))).toBe(true);
+      expect(newCookies.some((c: string) => c.startsWith('Refresh='))).toBe(true);
     });
 
     it('should return 401 if refresh token is missing', async () => {
       const authCookiesWithoutRefresh = adminCookies.filter(
-        (cookie) => !cookie.startsWith('Refresh='),
+        cookie => !cookie.startsWith('Refresh=')
       );
       await request(app.getHttpServer())
         .post('/auth/refresh')
@@ -226,15 +211,10 @@ describe('AuthController (e2e)', () => {
     });
 
     it('should return 401 if refresh token is invalid', async () => {
-      const authCookie = adminCookies.find((c) =>
-        c.startsWith('Authentication='),
-      );
+      const authCookie = adminCookies.find(c => c.startsWith('Authentication='));
       await request(app.getHttpServer())
         .post('/auth/refresh')
-        .set('Cookie', [
-          authCookie || '',
-          'Refresh=invalid-token; Path=/; HttpOnly',
-        ])
+        .set('Cookie', [authCookie || '', 'Refresh=invalid-token; Path=/; HttpOnly'])
         .expect(401);
     });
   });

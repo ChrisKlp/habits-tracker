@@ -1,10 +1,12 @@
-import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
-import { UserDto } from '@/users/dto/user.dto';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
+
+import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { UserDto } from '@/users/dto/user.dto';
+
 import { AppModule } from '../src/app.module';
 import { loginUser, mockUser } from './utils/auth.utils';
 import {
@@ -62,8 +64,8 @@ describe('UsersController (e2e)', () => {
 
       expect(body).toBeInstanceOf(Array);
       expect(body.length).toBe(2);
-      expect(body.find((u) => u.email === 'admin@test.com')).toBeDefined();
-      expect(body.find((u) => u.email === 'user@test.com')).toBeDefined();
+      expect(body.find(u => u.email === 'admin@test.com')).toBeDefined();
+      expect(body.find(u => u.email === 'user@test.com')).toBeDefined();
       // @ts-expect-error verifying password is not returned
       expect(body[0]?.password).toBeUndefined();
     });
@@ -78,10 +80,7 @@ describe('UsersController (e2e)', () => {
       const userCookies = await loginUser(app, { email: 'user@test.com' });
 
       // Act & Assert
-      await request(app.getHttpServer())
-        .get('/users')
-        .set('Cookie', userCookies)
-        .expect(403);
+      await request(app.getHttpServer()).get('/users').set('Cookie', userCookies).expect(403);
     });
   });
 
@@ -112,9 +111,7 @@ describe('UsersController (e2e)', () => {
     });
 
     it('should return 401 if not authenticated', async () => {
-      await request(app.getHttpServer())
-        .get(`/users/${mockUser.id}`)
-        .expect(401);
+      await request(app.getHttpServer()).get(`/users/${mockUser.id}`).expect(401);
     });
   });
 });

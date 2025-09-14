@@ -1,7 +1,8 @@
-import { pgTable, uuid, text } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
-import { usersTable } from './users';
+import { pgTable, text, uuid } from 'drizzle-orm/pg-core';
+
 import { idColumn, timestampColumns } from '../utils/commonColumns';
+import { usersTable } from './users';
 
 export const sessionsTable = pgTable('sessions', {
   ...idColumn,

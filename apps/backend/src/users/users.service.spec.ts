@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
+
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+
+import { UsersService } from './users.service';
 
 describe('UsersService', () => {
   let service: UsersService;

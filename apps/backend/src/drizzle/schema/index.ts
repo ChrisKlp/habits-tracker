@@ -1,8 +1,8 @@
-import * as users from './users';
-import * as sessions from './sessions';
-import * as profiles from './profiles';
-import * as habits from './habits';
 import * as habitLogs from './habitLogs';
+import * as habits from './habits';
+import * as profiles from './profiles';
+import * as sessions from './sessions';
+import * as users from './users';
 
 export * from './users';
 export * from './sessions';

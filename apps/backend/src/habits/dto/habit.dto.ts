@@ -1,10 +1,7 @@
-import { habitsTable } from '@/drizzle/schema';
-import {
-  createInsertSchema,
-  createSelectSchema,
-  createUpdateSchema,
-} from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema, createUpdateSchema } from 'drizzle-zod';
 import { createZodDto } from 'nestjs-zod';
+
+import { habitsTable } from '@/drizzle/schema';
 
 export const habitSelectSchema = createSelectSchema(habitsTable);
 const habitInsertSchema = createInsertSchema(habitsTable).omit({

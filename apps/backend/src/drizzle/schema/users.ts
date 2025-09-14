@@ -1,9 +1,10 @@
 import { relations } from 'drizzle-orm';
-import { varchar, text, pgTable } from 'drizzle-orm/pg-core';
-import { sessionsTable } from './sessions';
-import { profilesTable } from './profiles';
-import { habitsTable } from './habits';
+import { pgTable, text, varchar } from 'drizzle-orm/pg-core';
+
 import { idColumn, timestampColumns } from '../utils/commonColumns';
+import { habitsTable } from './habits';
+import { profilesTable } from './profiles';
+import { sessionsTable } from './sessions';
 
 export const usersTable = pgTable('users', {
   ...idColumn,

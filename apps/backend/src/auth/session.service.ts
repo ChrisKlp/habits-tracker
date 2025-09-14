@@ -1,13 +1,11 @@
+import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { asc, eq, inArray } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
 import { DeviceType } from '@/common/decorators/device.decorator';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { sessionsTable } from '@/drizzle/schema';
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { asc, eq, inArray } from 'drizzle-orm';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
 import { hashValue, validateValue } from './utils/hash';
 
 @Injectable()
@@ -20,7 +18,7 @@ export class SessionService {
     const now = new Date().toISOString();
 
     try {
-      await this.db.transaction(async (trx) => {
+      await this.db.transaction(async trx => {
         const session = await trx
           .select()
           .from(sessionsTable)
@@ -30,11 +28,9 @@ export class SessionService {
         if (session.length >= this.MAX_SESSIONS) {
           const toDeleteIds = session
             .slice(0, session.length - this.MAX_SESSIONS + 1)
-            .map((s) => s.id);
+            .map(s => s.id);
 
-          await trx
-            .delete(sessionsTable)
-            .where(inArray(sessionsTable.id, toDeleteIds));
+          await trx.delete(sessionsTable).where(inArray(sessionsTable.id, toDeleteIds));
         }
 
         await trx.insert(sessionsTable).values({
@@ -63,10 +59,7 @@ export class SessionService {
   }
 
   async getUserSessions(userId: string) {
-    return this.db
-      .select()
-      .from(sessionsTable)
-      .where(eq(sessionsTable.userId, userId));
+    return this.db.select().from(sessionsTable).where(eq(sessionsTable.userId, userId));
   }
 
   async validateSession(userId: string, refreshToken: string) {

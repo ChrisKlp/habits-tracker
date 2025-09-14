@@ -4,18 +4,20 @@ import {
   InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { Response } from 'express';
-import { RegisterDto } from './dto/register.dto';
-import { hashValue, validateValue } from './utils/hash';
-import { TokenService } from './token.service';
 import { ConfigService } from '@nestjs/config';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { Response } from 'express';
+
 import type { DeviceType } from '@/common/decorators/device.decorator';
+import { Drizzle } from '@/common/decorators/drizzle.decorator';
+import { usersTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
 import { UsersService } from '@/users/users.service';
-import { usersTable } from '@/drizzle/schema';
+
+import { RegisterDto } from './dto/register.dto';
 import { SessionService } from './session.service';
+import { TokenService } from './token.service';
+import { hashValue, validateValue } from './utils/hash';
 
 @Injectable()
 export class AuthService {
@@ -24,16 +26,12 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly sessionService: SessionService,
     private readonly config: ConfigService,
-    private readonly usersService: UsersService,
+    private readonly usersService: UsersService
   ) {}
 
   async login(user: ValidateUser, device: DeviceType, response: Response) {
-    const {
-      accessToken,
-      refreshToken,
-      accessTokenExpiresTime,
-      refreshTokenExpiresTime,
-    } = await this.tokenService.createJwtToken(user);
+    const { accessToken, refreshToken, accessTokenExpiresTime, refreshTokenExpiresTime } =
+      await this.tokenService.createJwtToken(user);
 
     await this.sessionService.addSession(user.userId, device, refreshToken);
 
@@ -72,10 +70,7 @@ export class AuthService {
   }
 
   async logout(user: ValidateUser, refreshToken: string) {
-    const currentSession = await this.sessionService.validateSession(
-      user.userId,
-      refreshToken,
-    );
+    const currentSession = await this.sessionService.validateSession(user.userId, refreshToken);
     await this.sessionService.removeSession(currentSession.id);
   }
 
@@ -93,10 +88,7 @@ export class AuthService {
     }
   }
 
-  async validateUserRefreshToken(
-    userId: string,
-    refreshToken: string,
-  ): Promise<ValidateUser> {
+  async validateUserRefreshToken(userId: string, refreshToken: string): Promise<ValidateUser> {
     try {
       const user = await this.usersService.findOne(userId);
       await this.sessionService.validateSession(userId, refreshToken);

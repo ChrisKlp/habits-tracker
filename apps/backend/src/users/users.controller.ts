@@ -1,8 +1,10 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { UsersService } from './users.service';
-import { Roles } from '@/common/decorators/roles.decorator';
-import { UserDto } from './dto/user.dto';
 import { ZodResponse } from 'nestjs-zod';
+
+import { Roles } from '@/common/decorators/roles.decorator';
+
+import { UserDto } from './dto/user.dto';
+import { UsersService } from './users.service';
 
 @Controller('users')
 export class UsersController {

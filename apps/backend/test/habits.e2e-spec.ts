@@ -1,10 +1,15 @@
-import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
-import { HabitDto } from '@/habits/dto/habit.dto';
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
+import { eq } from 'drizzle-orm';
 import request from 'supertest';
 import { App } from 'supertest/types';
+
+import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { habitsTable } from '@/drizzle/schema';
+import { HabitDto } from '@/habits/dto/habit.dto';
+import { UserDto } from '@/users/dto/user.dto';
+
 import { AppModule } from '../src/app.module';
 import { loginUser } from './utils/auth.utils';
 import {
@@ -16,9 +21,6 @@ import {
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
-import { habitsTable } from '@/drizzle/schema';
-import { eq } from 'drizzle-orm';
-import { UserDto } from '@/users/dto/user.dto';
 
 describe('HabitsController (e2e)', () => {
   let app: INestApplication<App>;
@@ -77,10 +79,7 @@ describe('HabitsController (e2e)', () => {
     });
 
     it('should return 401 if not authenticated', async () => {
-      await request(app.getHttpServer())
-        .post('/habits')
-        .send({ name: 'test' })
-        .expect(401);
+      await request(app.getHttpServer()).post('/habits').send({ name: 'test' }).expect(401);
     });
   });
 

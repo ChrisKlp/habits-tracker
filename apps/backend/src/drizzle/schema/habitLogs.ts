@@ -1,8 +1,9 @@
 import { relations } from 'drizzle-orm';
-import { integer, pgTable, uuid, date } from 'drizzle-orm/pg-core';
+import { date, integer, pgTable, uuid } from 'drizzle-orm/pg-core';
+
+import { idColumn, timestampColumns } from '../utils/commonColumns';
 import { habitsTable } from './habits';
 import { usersTable } from './users';
-import { idColumn, timestampColumns } from '../utils/commonColumns';
 
 export const habitLogsTable = pgTable('habit_logs', {
   ...idColumn,

@@ -1,14 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateHabitLogDto, UpdateHabitLogDto } from './dto/habit-log.dto';
-import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { habitLogsTable, habitsTable } from '@/drizzle/schema';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { and, desc, eq, getTableColumns, SQL } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+import { Drizzle } from '@/common/decorators/drizzle.decorator';
+import { habitLogsTable, habitsTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
+
+import { CreateHabitLogDto, UpdateHabitLogDto } from './dto/habit-log.dto';
 
 interface FindAllFilters {
   habitId?: string;
@@ -103,11 +101,7 @@ export class HabitLogsService {
     }
   }
 
-  async update(
-    id: string,
-    updateHabitLogDto: UpdateHabitLogDto,
-    userId: string,
-  ) {
+  async update(id: string, updateHabitLogDto: UpdateHabitLogDto, userId: string) {
     const [habitLog] = await this.db
       .update(habitLogsTable)
       .set({ ...updateHabitLogDto, userId })

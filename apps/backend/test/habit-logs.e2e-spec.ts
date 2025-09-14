@@ -1,3 +1,10 @@
+import { INestApplication } from '@nestjs/common';
+import { Test, TestingModule } from '@nestjs/testing';
+import cookieParser from 'cookie-parser';
+import { eq } from 'drizzle-orm';
+import request from 'supertest';
+import { App } from 'supertest/types';
+
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
 import { habitLogsTable } from '@/drizzle/schema';
 import {
@@ -6,13 +13,8 @@ import {
   HabitLogWithHabitDto,
 } from '@/habit-logs/dto/habit-log.dto';
 import { HabitDto } from '@/habits/dto/habit.dto';
-import { INestApplication } from '@nestjs/common';
-import { Test, TestingModule } from '@nestjs/testing';
 import { UserDto } from '@/users/dto/user.dto';
-import cookieParser from 'cookie-parser';
-import { eq } from 'drizzle-orm';
-import request from 'supertest';
-import { App } from 'supertest/types';
+
 import { AppModule } from '../src/app.module';
 import { loginUser } from './utils/auth.utils';
 import {

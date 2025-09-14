@@ -1,7 +1,8 @@
 import { relations } from 'drizzle-orm';
 import { pgTable, text, uuid, varchar } from 'drizzle-orm/pg-core';
-import { usersTable } from './users';
+
 import { idColumn, timestampColumns } from '../utils/commonColumns';
+import { usersTable } from './users';
 
 export const profilesTable = pgTable('profiles', {
   ...idColumn,

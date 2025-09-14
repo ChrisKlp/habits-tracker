@@ -1,7 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { eq } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { usersTable } from '@/drizzle/schema';
 
 @Injectable()

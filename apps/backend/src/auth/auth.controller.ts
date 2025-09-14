@@ -1,25 +1,18 @@
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
-import {
-  Body,
-  Controller,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Req,
-  Res,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
 import type { Request, Response } from 'express';
-import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
+import { ZodResponse } from 'nestjs-zod';
+
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { Device, type DeviceType } from '@/common/decorators/device.decorator';
 import { Public } from '@/common/decorators/public.decorator';
-import type { ValidateUser } from '@/types';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { JwtRefreshAuthGuard } from '@/common/guards/jwt-refresh-auth.guard';
-import { ZodResponse } from 'nestjs-zod';
+import { LocalAuthGuard } from '@/common/guards/local-auth.guard';
+import type { ValidateUser } from '@/types';
 import { UserDto } from '@/users/dto/user.dto';
+
+import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -31,7 +24,7 @@ export class AuthController {
   async login(
     @CurrentUser() user: ValidateUser,
     @Device() device: DeviceType,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response
   ) {
     return this.authService.login(user, device, response);
   }
@@ -42,7 +35,7 @@ export class AuthController {
   async refreshToken(
     @CurrentUser() user: ValidateUser,
     @Device() device: DeviceType,
-    @Res({ passthrough: true }) response: Response,
+    @Res({ passthrough: true }) response: Response
   ) {
     return this.authService.login(user, device, response);
   }
@@ -59,7 +52,7 @@ export class AuthController {
   async logout(
     @CurrentUser() user: ValidateUser,
     @Req() req: Request,
-    @Res({ passthrough: true }) res: Response,
+    @Res({ passthrough: true }) res: Response
   ) {
     const refreshToken = req.cookies?.Refresh as string;
     await this.authService.logout(user, refreshToken);

@@ -1,6 +1,7 @@
-import { usersTable } from '@/drizzle/schema/users';
 import { createSelectSchema } from 'drizzle-zod';
 import { createZodDto } from 'nestjs-zod';
+
+import { usersTable } from '@/drizzle/schema/users';
 
 const userSelectSchema = createSelectSchema(usersTable).omit({
   password: true,

@@ -1,10 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { AuthService } from './auth.service';
-import { TokenService } from './token.service';
-import { SessionService } from './session.service';
 import { ConfigService } from '@nestjs/config';
-import { UsersService } from '@/users/users.service';
+import { Test, TestingModule } from '@nestjs/testing';
+
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { UsersService } from '@/users/users.service';
+
+import { AuthService } from './auth.service';
+import { SessionService } from './session.service';
+import { TokenService } from './token.service';
 
 describe('AuthService', () => {
   let service: AuthService;

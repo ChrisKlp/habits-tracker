@@ -1,6 +1,7 @@
+import { NestFactory } from '@nestjs/core';
+
 import { AppModule } from '../src/app.module';
 import { setupSwagger } from '../src/config/swagger';
-import { NestFactory } from '@nestjs/core';
 
 async function generateOpenApi() {
   const app = await NestFactory.create(AppModule);

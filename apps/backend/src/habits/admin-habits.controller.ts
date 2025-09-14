@@ -1,10 +1,12 @@
 import { Controller, Get, Param } from '@nestjs/common';
-import { HabitsService } from './habits.service';
-import { Roles } from '@/common/decorators/roles.decorator';
-import { HabitDto } from './dto/habit.dto';
-import type { ValidateUser } from '@/types';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
 import { ZodResponse } from 'nestjs-zod';
+
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import { Roles } from '@/common/decorators/roles.decorator';
+import type { ValidateUser } from '@/types';
+
+import { HabitDto } from './dto/habit.dto';
+import { HabitsService } from './habits.service';
 
 @Roles('admin')
 @Controller('admin/habits')

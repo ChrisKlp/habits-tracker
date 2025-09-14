@@ -1,14 +1,12 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
-import { CreateHabitDto, UpdateHabitDto } from './dto/habit.dto';
-import { Drizzle } from '@/common/decorators/drizzle.decorator';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { habitsTable } from '@/drizzle/schema';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { and, eq } from 'drizzle-orm';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+
+import { Drizzle } from '@/common/decorators/drizzle.decorator';
+import { habitsTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
+
+import { CreateHabitDto, UpdateHabitDto } from './dto/habit.dto';
 
 @Injectable()
 export class HabitsService {
@@ -35,10 +33,7 @@ export class HabitsService {
   }
 
   async findAll(userId: string) {
-    return this.db
-      .select()
-      .from(habitsTable)
-      .where(eq(habitsTable.userId, userId));
+    return this.db.select().from(habitsTable).where(eq(habitsTable.userId, userId));
   }
 
   async findOne(id: string, user: ValidateUser) {

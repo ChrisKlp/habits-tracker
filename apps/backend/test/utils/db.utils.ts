@@ -1,13 +1,15 @@
+import path from 'path';
 import { eq, getTableName, isTable } from 'drizzle-orm';
-import { Pool } from 'pg';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { migrate } from 'drizzle-orm/node-postgres/migrator';
-import path from 'path';
-import schema, { habitLogsTable, habitsTable } from '../../src/drizzle/schema';
-import { hashValue } from '../../src/auth/utils/hash';
-import { mockAdmin, mockPassword, mockUser, mockUser2 } from './auth.utils';
-import { HabitDto } from '@/habits/dto/habit.dto';
+import { Pool } from 'pg';
+
 import { HabitLogDto } from '@/habit-logs/dto/habit-log.dto';
+import { HabitDto } from '@/habits/dto/habit.dto';
+
+import { hashValue } from '../../src/auth/utils/hash';
+import schema, { habitLogsTable, habitsTable } from '../../src/drizzle/schema';
+import { mockAdmin, mockPassword, mockUser, mockUser2 } from './auth.utils';
 
 type CreateHabitDto = typeof habitsTable.$inferInsert;
 type CreateHabitLogDto = typeof habitLogsTable.$inferInsert;
@@ -32,8 +34,8 @@ export async function setupTestDb(): Promise<DbUtils> {
 
 export async function truncateAllTables({ db }: Pick<DbUtils, 'db'>) {
   const tableNames = Object.values(schema)
-    .filter((o) => isTable(o))
-    .map((o) => getTableName(o));
+    .filter(o => isTable(o))
+    .map(o => getTableName(o));
   for (const tableName of tableNames) {
     await db.execute(`TRUNCATE TABLE "${tableName}" RESTART IDENTITY CASCADE;`);
   }
@@ -48,10 +50,7 @@ type CreateUserDto = Omit<typeof schema.usersTable.$inferInsert, 'password'> & {
   password?: string;
 };
 
-export async function insertUser(
-  { db }: Pick<DbUtils, 'db'>,
-  user: CreateUserDto,
-) {
+export async function insertUser({ db }: Pick<DbUtils, 'db'>, user: CreateUserDto) {
   const hashedPassword = await hashValue(mockPassword);
   const [newUser] = await db
     .insert(schema.usersTable)
@@ -80,10 +79,7 @@ export async function createUser2(dbUtils: DbUtils) {
   return insertUser(dbUtils, mockUser2);
 }
 
-export async function findUserByEmail(
-  { db }: Pick<DbUtils, 'db'>,
-  email: string,
-) {
+export async function findUserByEmail({ db }: Pick<DbUtils, 'db'>, email: string) {
   const user = await db
     .select()
     .from(schema.usersTable)
@@ -100,7 +96,7 @@ export async function findUserByEmail(
 
 export async function insertHabit(
   { db }: Pick<DbUtils, 'db'>,
-  habit: CreateHabitDto,
+  habit: CreateHabitDto
 ): Promise<HabitDto> {
   const [newHabit] = await db.insert(habitsTable).values(habit).returning();
 
@@ -113,7 +109,7 @@ export async function insertHabit(
 
 export async function insertHabitLog(
   { db }: Pick<DbUtils, 'db'>,
-  habitLog: Omit<CreateHabitLogDto, 'date'> & { date?: string },
+  habitLog: Omit<CreateHabitLogDto, 'date'> & { date?: string }
 ): Promise<HabitLogDto> {
   const [newHabitLog] = await db
     .insert(habitLogsTable)

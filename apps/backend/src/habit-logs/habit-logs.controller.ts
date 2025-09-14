@@ -1,23 +1,16 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
-import { HabitLogsService } from './habit-logs.service';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import { ZodResponse } from 'nestjs-zod';
+
+import { CurrentUser } from '@/common/decorators/current-user.decorator';
+import type { ValidateUser } from '@/types';
+
 import {
   CreateHabitLogDto,
   HabitLogDto,
   HabitLogWithHabitDto,
   UpdateHabitLogDto,
 } from './dto/habit-log.dto';
-import { CurrentUser } from '@/common/decorators/current-user.decorator';
-import type { ValidateUser } from '@/types';
-import { ZodResponse } from 'nestjs-zod';
+import { HabitLogsService } from './habit-logs.service';
 
 @Controller('habit-logs')
 export class HabitLogsController {
@@ -25,10 +18,7 @@ export class HabitLogsController {
 
   @ZodResponse({ type: HabitLogDto })
   @Post()
-  async create(
-    @CurrentUser() user: ValidateUser,
-    @Body() createHabitLogDto: CreateHabitLogDto,
-  ) {
+  async create(@CurrentUser() user: ValidateUser, @Body() createHabitLogDto: CreateHabitLogDto) {
     return this.habitLogsService.create(createHabitLogDto, user.userId);
   }
   @ZodResponse({ type: [HabitLogWithHabitDto] })
@@ -36,7 +26,7 @@ export class HabitLogsController {
   findAll(
     @CurrentUser() user: ValidateUser,
     @Query('habitId') habitId?: string,
-    @Query('date') date?: string,
+    @Query('date') date?: string
   ) {
     return this.habitLogsService.findAll({
       userId: user.userId,
@@ -56,17 +46,14 @@ export class HabitLogsController {
   update(
     @CurrentUser() user: ValidateUser,
     @Param('id') id: string,
-    @Body() updateHabitLogDto: UpdateHabitLogDto,
+    @Body() updateHabitLogDto: UpdateHabitLogDto
   ) {
     return this.habitLogsService.update(id, updateHabitLogDto, user.userId);
   }
 
   @ZodResponse({ type: HabitLogDto })
   @Delete(':id')
-  remove(
-    @CurrentUser() user: ValidateUser,
-    @Param('id') id: string,
-  ): Promise<HabitLogDto> {
+  remove(@CurrentUser() user: ValidateUser, @Param('id') id: string): Promise<HabitLogDto> {
     return this.habitLogsService.remove(id, user.userId);
   }
 }

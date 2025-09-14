@@ -22,7 +22,7 @@ export default async () => {
       stdio: 'inherit',
     });
     console.log('⏳ Waiting for PostgreSQL to fully initialize...');
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    await new Promise(resolve => setTimeout(resolve, 500));
 
     console.log('✅ Test database is ready!');
   } catch (error) {

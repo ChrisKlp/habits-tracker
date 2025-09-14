@@ -1,6 +1,6 @@
+import { writeFileSync } from 'fs';
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { writeFileSync } from 'fs';
 import { cleanupOpenApiDoc } from 'nestjs-zod';
 
 export function setupSwagger(app: INestApplication) {

@@ -29,11 +29,9 @@ type LoginCredentials = {
 
 export async function loginUser(
   app: INestApplication<App>,
-  { email, password = mockPassword }: LoginCredentials,
+  { email, password = mockPassword }: LoginCredentials
 ): Promise<string[]> {
-  const response = await request(app.getHttpServer())
-    .post('/auth/login')
-    .send({ email, password });
+  const response = await request(app.getHttpServer()).post('/auth/login').send({ email, password });
 
   if (response.status !== 201) {
     throw new Error(`Failed to login as ${email}. Status: ${response.status}`);
