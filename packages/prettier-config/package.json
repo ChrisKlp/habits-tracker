@@ -4,8 +4,9 @@
     "private": true,
     "type": "module",
     "license": "MIT",
-    "publishConfig": {
-        "access": "public"
+    "exports": {
+        "./backend": "./backend.mjs",
+        "./next": "./next.mjs"
     },
     "dependencies": {
         "prettier": "^3.6.2"
