@@ -8,4 +8,4 @@ export const registerUserSchema = z.object({
   password: passwordSchema,
 });
 
-export class RegisterDto extends createZodDto(registerUserSchema) {}
+export class RegisterUserDto extends createZodDto(registerUserSchema) {}

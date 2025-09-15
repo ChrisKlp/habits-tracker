@@ -12,7 +12,8 @@ import type { ValidateUser } from '@/types';
 import { UserDto } from '@/users/dto/user.dto';
 
 import { AuthService } from './auth.service';
-import { RegisterDto } from './dto/register.dto';
+import { LoginUserDto } from './dto/login.dto';
+import { RegisterUserDto } from './dto/register.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -24,7 +25,8 @@ export class AuthController {
   async login(
     @CurrentUser() user: ValidateUser,
     @Device() device: DeviceType,
-    @Res({ passthrough: true }) response: Response
+    @Res({ passthrough: true }) response: Response,
+    @Body() _loginDto: LoginUserDto
   ) {
     return this.authService.login(user, device, response);
   }
@@ -43,7 +45,7 @@ export class AuthController {
   @ZodResponse({ type: UserDto })
   @Roles('admin')
   @Post('register')
-  async register(@Body() registerDto: RegisterDto) {
+  async register(@Body() registerDto: RegisterUserDto) {
     return this.authService.register(registerDto);
   }
 

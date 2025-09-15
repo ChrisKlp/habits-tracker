@@ -15,7 +15,7 @@ export function setupSwagger(app: INestApplication) {
 
   writeFileSync('./openapi.json', JSON.stringify(cleanDoc, null, 2));
 
-  // SwaggerModule.setup('docs', app, cleanDoc);
+  SwaggerModule.setup('docs', app, cleanDoc);
 
   return cleanDoc;
 }

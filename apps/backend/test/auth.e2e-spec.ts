@@ -4,7 +4,7 @@ import cookieParser from 'cookie-parser';
 import request from 'supertest';
 import { App } from 'supertest/types';
 
-import { RegisterDto } from '@/auth/dto/register.dto';
+import { RegisterUserDto } from '@/auth/dto/register.dto';
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
 import { ValidateUser } from '@/types';
 import { UserDto } from '@/users/dto/user.dto';
@@ -55,7 +55,7 @@ describe('AuthController (e2e)', () => {
   });
 
   describe('/auth/register (POST)', () => {
-    const newUserData: RegisterDto = {
+    const newUserData: RegisterUserDto = {
       email: 'newuser@test.com',
       password: 'NewPassword123!',
     };

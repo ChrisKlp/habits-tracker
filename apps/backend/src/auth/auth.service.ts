@@ -14,7 +14,7 @@ import { usersTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
 import { UsersService } from '@/users/users.service';
 
-import { RegisterDto } from './dto/register.dto';
+import { RegisterUserDto } from './dto/register.dto';
 import { SessionService } from './session.service';
 import { TokenService } from './token.service';
 import { hashValue, validateValue } from './utils/hash';
@@ -49,7 +49,7 @@ export class AuthService {
     return user;
   }
 
-  async register(registerDto: RegisterDto) {
+  async register(registerDto: RegisterUserDto) {
     try {
       const [user] = await this.db
         .insert(usersTable)
