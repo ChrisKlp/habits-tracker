@@ -1,12 +1,5 @@
-import createClient from "openapi-fetch";
-import { paths } from "../generated/openapi";
+import createClient from 'openapi-fetch';
 
-const api = createClient<paths>({ baseUrl: "https://localhost:3001/api/" });
+import { paths } from '../generated/openapi';
 
-api.GET("/habits/{id}", {
-  params: {
-    path: {
-      id: "asd",
-    },
-  },
-});
+export const api = createClient<paths>({ baseUrl: process.env.NEXT_PUBLIC_API_URL });
