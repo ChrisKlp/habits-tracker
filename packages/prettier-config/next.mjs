@@ -1,10 +1,6 @@
 import baseConfig from './base.mjs';
 
-/** @typedef  {import("prettier").Config} PrettierConfig */
-/** @typedef {import("prettier-plugin-tailwindcss").PluginOptions} TailwindConfig */
-/** @typedef  {import("@trivago/prettier-plugin-sort-imports").PluginConfig} SortImportsConfig */
-
-/** @type { PrettierConfig | SortImportsConfig | TailwindConfig } */
+/** @type {import("prettier").Config} */
 export default {
   ...baseConfig,
   plugins: [...baseConfig.plugins, 'prettier-plugin-tailwindcss'],

@@ -134,23 +134,23 @@
 		</g>
 	</g>
 	<g>
-		<path style="fill:none;stroke:#4E8DEA;stroke-miterlimit:10;" d="M358.711,128.236H141.289c-6.295,0-11.417,5.122-11.417,11.417
+		<path style="fill:none;stroke:#6468F0;stroke-miterlimit:10;" d="M358.711,128.236H141.289c-6.295,0-11.417,5.122-11.417,11.417
 			V423.49c0,6.296,5.122,11.418,11.417,11.418h217.422c6.295,0,11.417-5.122,11.417-11.418V139.654
 			C370.128,133.359,365.006,128.236,358.711,128.236z"/>
-		<path style="fill:#D7E9FF;" d="M358.711,133.236H141.289c-3.544,0-6.417,2.873-6.417,6.417V423.49
+		<path style="fill:#e0e6ff;" d="M358.711,133.236H141.289c-3.544,0-6.417,2.873-6.417,6.417V423.49
 			c0,3.544,2.873,6.417,6.417,6.417h217.422c3.544,0,6.417-2.873,6.417-6.417V139.654
 			C365.128,136.11,362.255,133.236,358.711,133.236z"/>
 		<rect x="167.766" y="321.908" style="fill:#FFC649;" width="32.894" height="54"/>
 		<polygon style="fill:#FFFFFF;" points="184.212,337.983 187.762,345.175 195.699,346.329 189.956,351.927 191.312,359.832 
 			184.212,356.1 177.113,359.832 178.469,351.927 172.726,346.329 180.663,345.175 		"/>
-		<rect x="200.659" y="159.908" style="fill:#4E8DEA;" width="32.894" height="54"/>
+		<rect x="200.659" y="159.908" style="fill:#6468F0;" width="32.894" height="54"/>
 		<g>
 			<rect x="213.503" y="173.889" style="fill:#FFFFFF;" width="7.206" height="26.038"/>
 		</g>
 		<g>
 			<rect x="204.087" y="183.304" style="fill:#FFFFFF;" width="26.038" height="7.207"/>
 		</g>
-		<path style="fill:#4E8DEA;" d="M332.234,429.908h26.476c3.544,0,6.417-2.873,6.417-6.417V139.654c0-1.931-0.857-3.658-2.206-4.834
+		<path style="fill:#6468F0;" d="M332.234,429.908h26.476c3.544,0,6.417-2.873,6.417-6.417V139.654c0-1.931-0.857-3.658-2.206-4.834
 			h-30.688V429.908z"/>
 		<g>
 			<line style="fill:none;stroke:#FFFFFF;stroke-miterlimit:10;" x1="167.766" y1="151.856" x2="167.766" y2="429.908"/>
@@ -164,58 +164,58 @@
 			<line style="fill:none;stroke:#FFFFFF;stroke-miterlimit:10;" x1="299.341" y1="151.856" x2="299.341" y2="429.908"/>
 			<line style="fill:none;stroke:#FFFFFF;stroke-miterlimit:10;" x1="332.234" y1="151.856" x2="332.234" y2="429.908"/>
 		</g>
-		<path style="fill:#9FC6FF;" d="M358.711,133.236H141.289c-3.544,0-6.417,2.873-6.417,6.417v20.254h230.256v-20.254
+		<path style="fill:#adbcff;" d="M358.711,133.236H141.289c-3.544,0-6.417,2.873-6.417,6.417v20.254h230.256v-20.254
 			C365.128,136.11,362.255,133.236,358.711,133.236z"/>
 		
 			<text transform="matrix(1 0 0 1 221.8115 152.2922)" style="fill:#243144; font-family:'AntipastoPro-DemiBold'; font-size:14px;">OCTOBER</text>
 		<g>
-			<text transform="matrix(1 0 0 1 141.318 169.4458)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">1</text>
+			<text transform="matrix(1 0 0 1 141.318 169.4458)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">1</text>
 			
-				<text transform="matrix(1 0 0 1 173.4264 169.4458)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">2</text>
+				<text transform="matrix(1 0 0 1 173.4264 169.4458)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">2</text>
 			
 				<text transform="matrix(1 0 0 1 206.5348 169.4458)" style="fill:#FFFFFF; font-family:'AntipastoPro-DemiBold'; font-size:8px;">3</text>
 			
-				<text transform="matrix(1 0 0 1 239.6432 169.4458)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">4</text>
+				<text transform="matrix(1 0 0 1 239.6432 169.4458)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">4</text>
 			
-				<text transform="matrix(1 0 0 1 272.7516 169.4458)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">5</text>
+				<text transform="matrix(1 0 0 1 272.7516 169.4458)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">5</text>
 			
-				<text transform="matrix(1 0 0 1 305.8599 169.4458)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">6</text>
+				<text transform="matrix(1 0 0 1 305.8599 169.4458)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">6</text>
 			
 				<text transform="matrix(1 0 0 1 338.5571 169.4458)" style="fill:#FFFFFF; font-family:'AntipastoPro-DemiBold'; font-size:8px;">7</text>
-			<text transform="matrix(1 0 0 1 141.318 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">8</text>
+			<text transform="matrix(1 0 0 1 141.318 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">8</text>
 			
-				<text transform="matrix(1 0 0 1 173.4264 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">9</text>
-			<text transform="matrix(1 0 0 1 204.483 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">10</text>
+				<text transform="matrix(1 0 0 1 173.4264 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">9</text>
+			<text transform="matrix(1 0 0 1 204.483 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">10</text>
 			
-				<text transform="matrix(1 0 0 1 237.5914 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">11</text>
+				<text transform="matrix(1 0 0 1 237.5914 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">11</text>
 			
-				<text transform="matrix(1 0 0 1 270.6998 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">12</text>
+				<text transform="matrix(1 0 0 1 270.6998 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">12</text>
 			
-				<text transform="matrix(1 0 0 1 303.8082 223.6949)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">13</text>
+				<text transform="matrix(1 0 0 1 303.8082 223.6949)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">13</text>
 			
 				<text transform="matrix(1 0 0 1 336.5053 223.6949)" style="fill:#FFFFFF; font-family:'AntipastoPro-DemiBold'; font-size:8px;">14</text>
-			<text transform="matrix(1 0 0 1 139.2663 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">15</text>
-			<text transform="matrix(1 0 0 1 171.3746 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">16</text>
-			<text transform="matrix(1 0 0 1 204.483 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">17</text>
-			<text transform="matrix(1 0 0 1 237.5914 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">18</text>
-			<text transform="matrix(1 0 0 1 270.6998 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">19</text>
-			<text transform="matrix(1 0 0 1 303.8082 278.051)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">20</text>
+			<text transform="matrix(1 0 0 1 139.2663 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">15</text>
+			<text transform="matrix(1 0 0 1 171.3746 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">16</text>
+			<text transform="matrix(1 0 0 1 204.483 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">17</text>
+			<text transform="matrix(1 0 0 1 237.5914 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">18</text>
+			<text transform="matrix(1 0 0 1 270.6998 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">19</text>
+			<text transform="matrix(1 0 0 1 303.8082 278.051)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">20</text>
 			<text transform="matrix(1 0 0 1 336.5053 278.051)" style="fill:#FFFFFF; font-family:'AntipastoPro-DemiBold'; font-size:8px;">21</text>
 			
-				<text transform="matrix(1 0 0 1 139.2663 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">22</text>
+				<text transform="matrix(1 0 0 1 139.2663 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">22</text>
 			
-				<text transform="matrix(1 0 0 1 171.3746 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">23</text>
-			<text transform="matrix(1 0 0 1 204.483 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">24</text>
+				<text transform="matrix(1 0 0 1 171.3746 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">23</text>
+			<text transform="matrix(1 0 0 1 204.483 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">24</text>
 			
-				<text transform="matrix(1 0 0 1 139.2663 388.0806)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">29</text>
+				<text transform="matrix(1 0 0 1 139.2663 388.0806)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">29</text>
 			
-				<text transform="matrix(1 0 0 1 171.3746 388.0806)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">30</text>
+				<text transform="matrix(1 0 0 1 171.3746 388.0806)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">30</text>
 			
-				<text transform="matrix(1 0 0 1 237.5914 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">25</text>
+				<text transform="matrix(1 0 0 1 237.5914 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">25</text>
 			
-				<text transform="matrix(1 0 0 1 270.6998 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">26</text>
+				<text transform="matrix(1 0 0 1 270.6998 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">26</text>
 			
-				<text transform="matrix(1 0 0 1 303.8082 332.4071)" style="fill:#4E8DEA; font-family:'AntipastoPro-DemiBold'; font-size:8px;">27</text>
+				<text transform="matrix(1 0 0 1 303.8082 332.4071)" style="fill:#6468F0; font-family:'AntipastoPro-DemiBold'; font-size:8px;">27</text>
 			
 				<text transform="matrix(1 0 0 1 336.5053 332.4071)" style="fill:#FFFFFF; font-family:'AntipastoPro-DemiBold'; font-size:8px;">28</text>
 		</g>
@@ -345,21 +345,21 @@
 			c4.324,0,7.829-3.505,7.829-7.829v0C456.154,444.616,452.648,441.111,448.324,441.111z"/>
 	</g>
 	<g>
-		<polygon style="fill:none;stroke:#4E8DEA;stroke-width:2;stroke-miterlimit:10;" points="411.79,191.275 393.909,166.59 
+		<polygon style="fill:none;stroke:#6468F0;stroke-width:2;stroke-miterlimit:10;" points="411.79,191.275 393.909,166.59 
 			384.263,192.396 		"/>
-		<polygon style="fill:#4E8DEA;" points="402.983,146.742 414.953,160.57 419.379,144.643 		"/>
-		<polygon style="fill:none;stroke:#4E8DEA;stroke-width:2;stroke-miterlimit:10;" points="171.928,97.113 195.606,77.919 
+		<polygon style="fill:#6468F0;" points="402.983,146.742 414.953,160.57 419.379,144.643 		"/>
+		<polygon style="fill:none;stroke:#6468F0;stroke-width:2;stroke-miterlimit:10;" points="171.928,97.113 195.606,77.919 
 			169.315,69.687 		"/>
-		<polygon style="fill:#4E8DEA;" points="215.918,85.901 202.761,98.604 218.904,102.16 		"/>
-		<polygon style="fill:#4E8DEA;" points="330.296,112.412 347.827,117.622 342.985,101.818 		"/>
+		<polygon style="fill:#6468F0;" points="215.918,85.901 202.761,98.604 218.904,102.16 		"/>
+		<polygon style="fill:#6468F0;" points="330.296,112.412 347.827,117.622 342.985,101.818 		"/>
 		<polygon style="fill:#FFE697;" points="227.619,65.485 222.773,74.012 231.617,73.397 		"/>
 		<polygon style="fill:#FFE697;" points="349.791,85.901 354.038,94.742 358.571,87.123 		"/>
 		<polygon style="fill:#FFC649;" points="82.624,175.115 103.307,197.505 109.824,170.737 		"/>
 		<polygon style="fill:#FFC649;" points="398.657,250.173 394.421,240.877 389.539,248.715 		"/>
-		<polygon style="fill:#4E8DEA;" points="96.652,218.289 83.126,205.98 80.621,222.319 		"/>
-		<polygon style="fill:#9FC6FF;" points="117.782,228.648 108.959,224.363 110.144,233.148 		"/>
-		<polygon style="fill:#9FC6FF;" points="156.181,97.005 147.359,92.72 148.544,101.506 		"/>
-		<polygon style="fill:none;stroke:#4E8DEA;stroke-miterlimit:10;" points="377.732,133.95 385.984,139.251 385.849,130.388 		"/>
+		<polygon style="fill:#6468F0;" points="96.652,218.289 83.126,205.98 80.621,222.319 		"/>
+		<polygon style="fill:#adbcff;" points="117.782,228.648 108.959,224.363 110.144,233.148 		"/>
+		<polygon style="fill:#adbcff;" points="156.181,97.005 147.359,92.72 148.544,101.506 		"/>
+		<polygon style="fill:none;stroke:#6468F0;stroke-miterlimit:10;" points="377.732,133.95 385.984,139.251 385.849,130.388 		"/>
 	</g>
 	<g>
 		<path style="fill:#F2CC9E;" d="M320.589,248.65c0,0,3.088,31.683,3.088,32.922c0,1.239-7.072,33.903-7.341,34.434
@@ -404,7 +404,7 @@
 			c-0.328,4.141-0.714,8.279-0.753,12.435c-0.03,3.223-0.626,8.543,1.047,11.496c0.446,0.788,1.187,1.312,2.022,1.626
 			c0.986,0.37,2.182,0.119,3.107,0.505c0.907,0.378,0.86,1.351,0.904,2.207c0.074,1.416,0.093,2.836,0.068,4.254
 			c2.833,0.267,5.675,0.446,8.519,0.536c0.796,0.025,1.607,0.042,2.374-0.174C299.324,225.889,300.045,225.303,300.535,224.55z"/>
-		<path style="fill:#4E8DEA;" d="M328.46,342.816c-0.392-3.156-1.085-6.186-1.458-8.373c-4.494-26.319-15.482-51.66-15.206-78.696
+		<path style="fill:#6468F0;" d="M328.46,342.816c-0.392-3.156-1.085-6.186-1.458-8.373c-4.494-26.319-15.482-51.66-15.206-78.696
 			c0.014-1.354-0.392-3.151,0.939-4.018c1.505-0.98,9.231-1.729,9.231-1.729s-0.428-1.855-0.811-2.95
 			c-1.709-4.884-3.606-9.697-5.742-14.411c-1.162-2.563-2.486-5.295-4.935-6.859c-3.655-2.333-8.236-2.687-12.44-2.926
 			c-4.703-0.268-9.426-0.183-14.117,0.257c-1.139,0.107-2.285,0.236-3.376,0.58c-0.746,0.235-1.457,0.568-2.165,0.901
@@ -414,7 +414,7 @@
 			c-0.059,4.36-0.246,8.719-0.585,13.066c-0.69,8.852-2.115,17.546-4.349,26.154c-3.421,13.182-6.051,26.269-8.39,39.678
 			c-0.795,4.558-3.022,10.833,1.099,14.448c1.704,1.495,3.894,2.3,6.056,2.983c16.25,5.136,33.301,2.647,50.095,2.016
 			c1.799-0.068,3.665-0.152,5.264-0.982C328.903,354.343,329.151,348.385,328.46,342.816z"/>
-		<path style="fill:#407AE2;" d="M311.353,249.716c0.169,1.32,0.299,2.645,0.413,3.971c0.051-0.777,0.264-1.498,0.969-1.957
+		<path style="fill:#4348d3;" d="M311.353,249.716c0.169,1.32,0.299,2.645,0.413,3.971c0.051-0.777,0.264-1.498,0.969-1.957
 			c1.505-0.981,9.231-1.729,9.231-1.729s-0.428-1.855-0.811-2.95c-0.241-0.688-0.52-0.38-0.986-0.072
 			c-3.833,2.529-7.994-1.318-8.951-4.954c-0.105-0.398-0.262-0.702-0.589-0.977c-0.164-0.138-1.069-0.414-1.112-0.508
 			c0.292,0.639,0.385,1.442,0.545,2.127c0.18,0.772,0.371,1.544,0.526,2.321C310.901,246.553,311.151,248.131,311.353,249.716z"/>
@@ -423,12 +423,12 @@
 				<path style="fill:none;stroke:#F2CC9E;stroke-miterlimit:10;" d="M253.489,219.215"/>
 			</g>
 		</g>
-		<path style="fill:#407AE2;" d="M267.24,244.408c0.793,1.234,1.587,2.467,2.38,3.7c0.15,0.232,0.318,0.48,0.58,0.57
+		<path style="fill:#4348d3;" d="M267.24,244.408c0.793,1.234,1.587,2.467,2.38,3.7c0.15,0.232,0.318,0.48,0.58,0.57
 			c0.222,0.076,0.465,0.02,0.691-0.038c1.396-0.363,2.744-0.862,4.056-1.459c0.299-1.252,0.355-4.49-0.145-4.218
 			c-1.75,0.949-2.455,1.389-4.476,1.435C269.304,244.421,268.269,244.384,267.24,244.408z"/>
-		<path style="fill:#4E8DEA;" d="M260.054,439.036c-0.002,0.003-0.6,1.1,0.737,1.731c1.339,0.632,21.816,0.199,21.816,0.199
+		<path style="fill:#6468F0;" d="M260.054,439.036c-0.002,0.003-0.6,1.1,0.737,1.731c1.339,0.632,21.816,0.199,21.816,0.199
 			s0.162-0.675,0.202-1.86C276.66,439.263,263.149,439.08,260.054,439.036z"/>
-		<path style="fill:#4E8DEA;" d="M291.05,439.061c-0.063,0.127-0.504,1.115,0.749,1.706c1.339,0.632,20.516,0.199,20.516,0.199
+		<path style="fill:#6468F0;" d="M291.05,439.061c-0.063,0.127-0.504,1.115,0.749,1.706c1.339,0.632,20.516,0.199,20.516,0.199
 			s0.163-0.68,0.203-1.875C307.431,439.25,296.065,439.126,291.05,439.061z"/>
 		<path style="fill:#243144;" d="M321.481,230.119c-0.878-2.484-2.569-4.543-3.488-7.016c-1.505-4.046,0.393-7.824-0.274-11.899
 			c-0.421-2.574-2.032-4.72-3.179-7.001c-1.696-3.373-1.355-7.014-1.953-10.625c-0.517-3.119-1.682-6.325-3.649-8.821
@@ -440,7 +440,7 @@
 			c0.184,1.979,1.377,3.693,3.095,4.653c2.539,1.42,4.288,0.592,6.913,0.065c3.078-0.617,5.914,0.701,8.814,1.345
 			c1.897,0.421,3.781-0.565,5.501-1.234c1.949-0.758,2.797-1.186,4.927-0.945c3.088,0.35,6.986-0.43,8.486-3.504
 			C322.776,235.782,322.39,232.693,321.481,230.119z"/>
-		<path style="fill:#407AE2;" d="M328.46,342.816c-0.392-3.156-1.085-6.186-1.458-8.373c-2.713-15.892-7.792-31.429-11.332-47.197
+		<path style="fill:#4348d3;" d="M328.46,342.816c-0.392-3.156-1.085-6.186-1.458-8.373c-2.713-15.892-7.792-31.429-11.332-47.197
 			c-0.044,7.628,1.011,15.022,2.886,22.61c2.366,9.573,6.763,25.874-3.019,33.025c-5.239,3.829-12.37,1.915-18.2,0.819
 			c-3.993-0.75-7.556-0.613-11.458,0.617c-4.769,1.503-9.279,3.421-14.262,4.199c-3.86,0.602-7.69,0.574-10.172-2.912
 			c-0.292-0.41-0.553-0.852-0.801-1.306c-0.414,3.133-0.228,6.251,2.24,8.417c1.704,1.495,3.894,2.3,6.056,2.983
