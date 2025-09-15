@@ -5,7 +5,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { cn } from '@/lib/utils';
 
-export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRef<'form'>) {
+export function LoginForm({
+  className,
+  defaultEmail,
+  ...props
+}: React.ComponentPropsWithoutRef<'form'> & { defaultEmail?: string }) {
   return (
     <form className={cn('flex flex-col gap-6', className)} {...props}>
       <div className="flex flex-col items-center gap-2 text-center">
@@ -17,7 +21,14 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
       <div className="grid gap-6">
         <div className="grid gap-2">
           <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" name="email" placeholder="m@example.com" required />
+          <Input
+            id="email"
+            type="email"
+            name="email"
+            placeholder="m@example.com"
+            required
+            defaultValue={defaultEmail}
+          />
         </div>
         <div className="grid gap-2">
           <Label htmlFor="password">Password</Label>

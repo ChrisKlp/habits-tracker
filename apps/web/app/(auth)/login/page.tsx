@@ -1,18 +1,30 @@
 'use client';
 
-import { useActionState } from 'react';
+import { useActionState, useEffect, useState } from 'react';
 import Image from 'next/image';
-import { useRouter } from 'next/router';
 
 import { GalleryVerticalEnd } from 'lucide-react';
+import { toast } from 'sonner';
 
 import { LoginForm } from '@/components/login-form';
 import { login, LoginActionState } from '../actions';
 
 export default function LoginPage() {
-  const [state, formAction] = useActionState<LoginActionState, FormData>(login, {
-    status: 'idle',
-  });
+  const [email, setEmail] = useState('');
+  const [state, formAction] = useActionState<LoginActionState, FormData>(login, {});
+
+  useEffect(() => {
+    if (state.error) {
+      toast.error(state.error, {
+        position: 'top-right',
+      });
+    }
+  }, [state.error]);
+
+  function handleSubmit(formData: FormData) {
+    setEmail(formData.get('email') as string);
+    formAction(formData);
+  }
 
   return (
     <div className="bg-primary grid min-h-svh lg:grid-cols-2">
@@ -27,13 +39,13 @@ export default function LoginPage() {
         </div>
         <div className="flex flex-1 items-center justify-center">
           <div className="w-full max-w-md rounded-xl bg-white p-12">
-            <LoginForm action={formAction} />
+            <LoginForm action={handleSubmit} defaultEmail={email} />
           </div>
         </div>
       </div>
       <div className="relative hidden bg-white lg:block">
         <Image
-          src="/habit-tracker-login.svg"
+          src="/images/habit-tracker-login.svg"
           width={1280}
           height={720}
           alt="Image"

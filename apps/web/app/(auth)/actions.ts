@@ -1,38 +1,57 @@
 'use server';
 
-import z from 'zod/v4';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+
+import z from 'zod';
 
 import { api } from '@/lib/api';
+import { isApiError } from '@/lib/api-utils';
+import { getAuthCookie } from '@/lib/auth-cookie';
 
 const authFormSchema = z.object({
   email: z.email(),
-  password: z.string().min(8),
+  password: z.string(),
 });
 
 export interface LoginActionState {
-  status: 'idle' | 'in_progress' | 'success' | 'failed' | 'invalid_data';
+  error?: string;
 }
-
-export async function login(
-  prevState: LoginActionState,
-  formData: FormData
-): Promise<LoginActionState> {
+export async function login(_: LoginActionState, formData: FormData): Promise<LoginActionState> {
   try {
     const validatedData = authFormSchema.parse({
       email: formData.get('email'),
       password: formData.get('password'),
     });
 
-    const res = await api.POST('/auth/login');
-    console.log(res);
+    const { error: apiError, response } = await api.POST('/auth/login', {
+      body: validatedData,
+    });
 
-    return { status: 'success' };
-  } catch (error) {
-    console.log({ error });
-    if (error instanceof z.ZodError) {
-      return { status: 'invalid_data' };
+    if (apiError) {
+      throw apiError;
     }
 
-    return { status: 'failed' };
+    const cookie = getAuthCookie(response);
+    const cookieStore = await cookies();
+
+    if (cookie?.accessToken) {
+      cookieStore.set(cookie.accessToken);
+    }
+    if (cookie?.refreshToken) {
+      cookieStore.set(cookie.refreshToken);
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return { error: 'Invalid data' };
+    }
+
+    if (isApiError(error)) {
+      return { error: error.message };
+    }
+
+    return { error: 'Authentication failed' };
   }
+
+  redirect('/');
 }
