@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import z from 'zod';
 
-import { api } from '@/lib/api/api';
+import { createServerApi } from '@/lib/api';
 import { isApiError } from '@/lib/api/api-utils';
 import { getAuthCookie } from '@/lib/auth/auth-cookie';
 
@@ -24,7 +24,9 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       password: formData.get('password'),
     });
 
-    const { error: apiError, response } = await api.POST('/auth/login', {
+    const serverApi = await createServerApi();
+
+    const { error: apiError, response } = await serverApi.POST('/auth/login', {
       body: validatedData,
     });
 

@@ -23,14 +23,14 @@ export function getAuthCookie(res: Response) {
     accessToken: accessToken && {
       name: AUTH_COOKIE,
       value: accessToken,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       expires: new Date(jwtDecode(accessToken).exp! * 1000),
     },
     refreshToken: refreshToken && {
       name: REFRESH_COOKIE,
       value: refreshToken,
-      secure: true,
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       expires: new Date(jwtDecode(refreshToken).exp! * 1000),
     },

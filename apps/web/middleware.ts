@@ -1,7 +1,7 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { api } from './lib/api/api';
+import { clientApi } from './lib/api';
 import { AUTH_COOKIE, getAuthCookie, REFRESH_COOKIE } from './lib/auth/auth-cookie';
 
 const publicRoutes = ['/login'];
@@ -11,7 +11,7 @@ export async function middleware(request: NextRequest) {
   const authenticated = cookieStore.has(AUTH_COOKIE);
 
   if (!authenticated && cookieStore.has(REFRESH_COOKIE)) {
-    const refresh = await api.POST('/auth/refresh', {
+    const refresh = await clientApi.POST('/auth/refresh', {
       headers: {
         Cookie: cookieStore.toString(),
       },
@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
     const authCookies = getAuthCookie(refresh.response);
 
     if (authCookies?.accessToken) {
-      const response = NextResponse.redirect(request.url);
+      const response = NextResponse.next();
       response.cookies.set(authCookies.accessToken);
       return response;
     }
