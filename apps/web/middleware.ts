@@ -1,8 +1,8 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { api } from './lib/api';
-import { AUTH_COOKIE, getAuthCookie, REFRESH_COOKIE } from './lib/auth-cookie';
+import { api } from './lib/api/api';
+import { AUTH_COOKIE, getAuthCookie, REFRESH_COOKIE } from './lib/auth/auth-cookie';
 
 const publicRoutes = ['/login'];
 

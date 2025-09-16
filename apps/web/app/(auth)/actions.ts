@@ -5,9 +5,9 @@ import { redirect } from 'next/navigation';
 
 import z from 'zod';
 
-import { api } from '@/lib/api';
-import { isApiError } from '@/lib/api-utils';
-import { getAuthCookie } from '@/lib/auth-cookie';
+import { api } from '@/lib/api/api';
+import { isApiError } from '@/lib/api/api-utils';
+import { getAuthCookie } from '@/lib/auth/auth-cookie';
 
 const authFormSchema = z.object({
   email: z.email(),
