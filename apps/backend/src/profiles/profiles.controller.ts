@@ -7,12 +7,12 @@ import type { ValidateUser } from '@/types';
 import { ProfileDto, UpdateProfileDto } from './dto/profile.dto';
 import { ProfilesService } from './profiles.service';
 
-@Controller('profiles')
+@Controller('profile')
 export class ProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
   @ZodResponse({ type: ProfileDto })
-  @Get('me')
+  @Get()
   async findOne(@CurrentUser() user: ValidateUser) {
     return this.profilesService.findOne(user.userId);
   }
