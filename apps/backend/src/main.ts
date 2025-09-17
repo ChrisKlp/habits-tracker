@@ -1,5 +1,7 @@
+import { Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
+import chalk from 'chalk';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
 import helmet from 'helmet';
@@ -10,6 +12,7 @@ import { setupSwagger } from './config/swagger';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
 
   if (configService.get('NODE_ENV') !== 'production') {
     setupSwagger(app);
@@ -21,7 +24,27 @@ async function bootstrap() {
   app.use(helmet());
   app.use(cookieParser());
 
-  await app.listen(process.env.PORT ?? 3001);
+  await app.listen(configService.get('PORT') ?? 3001, () => {
+    logger.log(
+      [
+        '\n',
+        chalk.cyan('╔══════════════════════════════════════════════════════╗'),
+        chalk.green.bold('  🚀 Service Started!'),
+        chalk.cyanBright('  ────────────────────────────────────────────────────'),
+        chalk.blueBright('  🌍 URL: ') +
+          chalk.whiteBright.underline(
+            `http://${configService.get('HOST')}:${configService.get('PORT')}`
+          ),
+        chalk.yellowBright('  📚 Docs: ') +
+          chalk.whiteBright.underline(
+            `http://${configService.get('HOST')}:${configService.get('PORT')}/docs`
+          ),
+        chalk.cyanBright('  🌱 Env: ') + chalk.whiteBright(`${configService.get('NODE_ENV')}`),
+        chalk.cyan('╚══════════════════════════════════════════════════════╝'),
+        '',
+      ].join('\n')
+    );
+  });
 }
 
 bootstrap().catch(err => {
