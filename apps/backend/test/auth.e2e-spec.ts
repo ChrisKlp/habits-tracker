@@ -1,11 +1,13 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import cookieParser from 'cookie-parser';
+import { eq } from 'drizzle-orm';
 import request from 'supertest';
 import { App } from 'supertest/types';
 
 import { RegisterUserDto } from '@/auth/dto/register.dto';
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
+import { profilesTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
 import { UserDto } from '@/users/dto/user.dto';
 
@@ -74,6 +76,18 @@ describe('AuthController (e2e)', () => {
       const dbUser = (await findUserByEmail(dbUtils, newUserData.email)) as UserDto;
       expect(dbUser).toBeDefined();
       expect(dbUser.email).toBe(newUserData.email);
+
+      const [profile] = await dbUtils.db
+        .select()
+        .from(profilesTable)
+        .where(eq(profilesTable.userId, createdUser.id));
+
+      if (!profile) {
+        fail('Profile not found');
+      }
+
+      expect(profile).toBeDefined();
+      expect(profile.displayName).toBe(newUserData.email.split('@')[0]);
     });
 
     it('should return 403 when a non-admin tries to register a user', async () => {

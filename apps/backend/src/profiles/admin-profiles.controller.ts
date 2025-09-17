@@ -12,8 +12,8 @@ export class AdminProfilesController {
   constructor(private readonly profilesService: ProfilesService) {}
 
   @ZodResponse({ type: ProfileDto })
-  @Post()
-  async create(@Body() createProfileDto: CreateProfileDto, @Param('userId') userId: string) {
+  @Post(':userId')
+  async create(@Param('userId') userId: string, @Body() createProfileDto: CreateProfileDto) {
     return this.profilesService.create(userId, createProfileDto);
   }
 }
