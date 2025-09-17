@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param, Query } from '@nestjs/common';
 import { ZodResponse } from 'nestjs-zod';
 
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -13,7 +13,7 @@ import { HabitLogsService } from './habit-logs.service';
 export class AdminHabitLogsController {
   constructor(private readonly habitLogsService: HabitLogsService) {}
 
-  @ZodResponse({ type: [HabitLogWithHabitDto] })
+  @ZodResponse({ type: [HabitLogWithHabitDto], status: HttpStatus.OK })
   @Get()
   findAll(
     @Query('habitId') habitId?: string,
@@ -23,7 +23,7 @@ export class AdminHabitLogsController {
     return this.habitLogsService.findAll({ userId, habitId, date });
   }
 
-  @ZodResponse({ type: HabitLogWithHabitDto })
+  @ZodResponse({ type: HabitLogWithHabitDto, status: HttpStatus.OK })
   @Get(':id')
   findOne(@Param('id') id: string, @CurrentUser() user: ValidateUser) {
     return this.habitLogsService.findOne(id, user);

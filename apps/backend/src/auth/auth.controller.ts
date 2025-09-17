@@ -42,7 +42,7 @@ export class AuthController {
     return this.authService.login(user, device, response);
   }
 
-  @ZodResponse({ type: UserDto })
+  @ZodResponse({ type: UserDto, status: HttpStatus.CREATED })
   @Roles('admin')
   @Post('register')
   async register(@Body() registerDto: RegisterUserDto) {

@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
 import { ZodResponse } from 'nestjs-zod';
 
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -13,13 +13,13 @@ import { HabitsService } from './habits.service';
 export class AdminHabitsController {
   constructor(private readonly habitsService: HabitsService) {}
 
-  @ZodResponse({ type: [HabitDto] })
+  @ZodResponse({ type: [HabitDto], status: HttpStatus.OK })
   @Get()
   async findAll() {
     return this.habitsService.findAllAsAdmin();
   }
 
-  @ZodResponse({ type: HabitDto })
+  @ZodResponse({ type: HabitDto, status: HttpStatus.OK })
   @Get(':id')
   async findOne(@CurrentUser() user: ValidateUser, @Param('id') id: string) {
     return this.habitsService.findOne(id, user);

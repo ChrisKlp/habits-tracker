@@ -57,7 +57,7 @@ describe('ProfilesController (e2e)', () => {
     await app.close();
   });
 
-  describe('/profile (GET)', () => {
+  describe('/profiles/me (GET)', () => {
     it("should return the current user's profile", async () => {
       await dbUtils.db.insert(profilesTable).values({
         userId: user.id,
@@ -65,7 +65,7 @@ describe('ProfilesController (e2e)', () => {
       });
 
       const response = await request(app.getHttpServer())
-        .get('/profile')
+        .get('/profiles/me')
         .set('Cookie', userCookies)
         .expect(200);
 
@@ -75,11 +75,11 @@ describe('ProfilesController (e2e)', () => {
     });
 
     it('should return 404 if the user does not have a profile', async () => {
-      await request(app.getHttpServer()).get('/profile').set('Cookie', userCookies).expect(404);
+      await request(app.getHttpServer()).get('/profiles/me').set('Cookie', userCookies).expect(404);
     });
 
     it('should return 401 if not authenticated', async () => {
-      await request(app.getHttpServer()).get('/profile').expect(401);
+      await request(app.getHttpServer()).get('/profiles/me').expect(401);
     });
   });
 
@@ -93,7 +93,7 @@ describe('ProfilesController (e2e)', () => {
       const updateProfileDto = { displayName: 'New Name' };
 
       const response = await request(app.getHttpServer())
-        .patch('/profile')
+        .patch('/profiles')
         .set('Cookie', userCookies)
         .send(updateProfileDto)
         .expect(200);

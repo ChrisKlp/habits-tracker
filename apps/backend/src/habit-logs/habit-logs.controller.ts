@@ -1,4 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+  Query,
+} from '@nestjs/common';
 import { ZodResponse } from 'nestjs-zod';
 
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -16,12 +26,13 @@ import { HabitLogsService } from './habit-logs.service';
 export class HabitLogsController {
   constructor(private readonly habitLogsService: HabitLogsService) {}
 
-  @ZodResponse({ type: HabitLogDto })
+  @ZodResponse({ type: HabitLogDto, status: HttpStatus.CREATED })
   @Post()
   async create(@CurrentUser() user: ValidateUser, @Body() createHabitLogDto: CreateHabitLogDto) {
     return this.habitLogsService.create(createHabitLogDto, user.userId);
   }
-  @ZodResponse({ type: [HabitLogWithHabitDto] })
+
+  @ZodResponse({ type: [HabitLogWithHabitDto], status: HttpStatus.OK })
   @Get()
   findAll(
     @CurrentUser() user: ValidateUser,
@@ -35,13 +46,13 @@ export class HabitLogsController {
     });
   }
 
-  @ZodResponse({ type: HabitLogWithHabitDto })
+  @ZodResponse({ type: HabitLogWithHabitDto, status: HttpStatus.OK })
   @Get(':id')
   findOne(@CurrentUser() user: ValidateUser, @Param('id') id: string) {
     return this.habitLogsService.findOne(id, user);
   }
 
-  @ZodResponse({ type: HabitLogDto })
+  @ZodResponse({ type: HabitLogDto, status: HttpStatus.OK })
   @Patch(':id')
   update(
     @CurrentUser() user: ValidateUser,
@@ -51,7 +62,7 @@ export class HabitLogsController {
     return this.habitLogsService.update(id, updateHabitLogDto, user.userId);
   }
 
-  @ZodResponse({ type: HabitLogDto })
+  @ZodResponse({ type: HabitLogDto, status: HttpStatus.OK })
   @Delete(':id')
   remove(@CurrentUser() user: ValidateUser, @Param('id') id: string): Promise<HabitLogDto> {
     return this.habitLogsService.remove(id, user.userId);

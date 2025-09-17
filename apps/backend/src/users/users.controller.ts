@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Param } from '@nestjs/common';
 import { ZodResponse } from 'nestjs-zod';
 
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -10,14 +10,14 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @ZodResponse({ type: [UserDto] })
+  @ZodResponse({ type: [UserDto], status: HttpStatus.OK })
   @Roles('admin')
   @Get()
   async findAll() {
     return this.usersService.findAll();
   }
 
-  @ZodResponse({ type: UserDto })
+  @ZodResponse({ type: UserDto, status: HttpStatus.OK })
   @Roles('admin')
   @Get(':id')
   async findOne(@Param('id') id: string) {
