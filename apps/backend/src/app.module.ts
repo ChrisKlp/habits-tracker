@@ -12,6 +12,7 @@ import { DrizzleModule } from './drizzle/drizzle.module';
 import { SeedService } from './drizzle/seed.service';
 import { HabitLogsModule } from './habit-logs/habit-logs.module';
 import { HabitsModule } from './habits/habits.module';
+import { ProfilesModule } from './profiles/profiles.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -22,6 +23,7 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     HabitsModule,
     HabitLogsModule,
+    ProfilesModule,
   ],
   controllers: [],
   providers: [

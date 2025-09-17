@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   InternalServerErrorException,
   UnauthorizedException,
@@ -11,6 +12,7 @@ import { Response } from 'express';
 import type { DeviceType } from '@/common/decorators/device.decorator';
 import { Drizzle } from '@/common/decorators/drizzle.decorator';
 import { usersTable } from '@/drizzle/schema';
+import { ProfilesService } from '@/profiles/profiles.service';
 import { ValidateUser } from '@/types';
 import { UsersService } from '@/users/users.service';
 
@@ -26,7 +28,8 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly sessionService: SessionService,
     private readonly config: ConfigService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly profilesService: ProfilesService
   ) {}
 
   async login(user: ValidateUser, device: DeviceType, response: Response) {
@@ -60,11 +63,17 @@ export class AuthService {
         .returning();
 
       if (!user) {
-        throw new BadRequestException();
+        throw new Error('Could not create user with given data');
       }
 
+      const displayName = registerDto.email.split('@')[0] as string;
+      await this.profilesService.create(user.id, { displayName });
+
       return user;
-    } catch {
+    } catch (error) {
+      if (error instanceof ConflictException || error instanceof BadRequestException) {
+        throw error;
+      }
       throw new InternalServerErrorException('Failed to register user');
     }
   }
