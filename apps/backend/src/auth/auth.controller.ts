@@ -1,4 +1,14 @@
-import { Body, Controller, HttpCode, HttpStatus, Post, Req, Res, UseGuards } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Req,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import type { Request, Response } from 'express';
 import { ZodResponse } from 'nestjs-zod';
 
@@ -14,6 +24,7 @@ import { UserDto } from '@/users/dto/user.dto';
 import { AuthService } from './auth.service';
 import { LoginUserDto } from './dto/login.dto';
 import { RegisterUserDto } from './dto/register.dto';
+import { ValidateUserDto } from './dto/validateUser.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -60,5 +71,11 @@ export class AuthController {
     await this.authService.logout(user, refreshToken);
     res.clearCookie('Authentication');
     res.clearCookie('Refresh');
+  }
+
+  @ZodResponse({ type: ValidateUserDto, status: HttpStatus.OK })
+  @Get('me')
+  async getMe(@CurrentUser() user: ValidateUser) {
+    return this.authService.getMe(user.userId);
   }
 }

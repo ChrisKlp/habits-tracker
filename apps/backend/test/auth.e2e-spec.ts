@@ -6,6 +6,7 @@ import request from 'supertest';
 import { App } from 'supertest/types';
 
 import { RegisterUserDto } from '@/auth/dto/register.dto';
+import { ValidateUserDto } from '@/auth/dto/validateUser.dto';
 import { DRIZZLE_PROVIDER } from '@/drizzle/drizzle.provider';
 import { profilesTable } from '@/drizzle/schema';
 import { ValidateUser } from '@/types';
@@ -230,6 +231,26 @@ describe('AuthController (e2e)', () => {
         .post('/auth/refresh')
         .set('Cookie', [authCookie || '', 'Refresh=invalid-token; Path=/; HttpOnly'])
         .expect(401);
+    });
+  });
+
+  describe('/auth/me (GET)', () => {
+    it('should return current user info for an authenticated user', async () => {
+      const response = await request(app.getHttpServer())
+        .get('/auth/me')
+        .set('Cookie', adminCookies)
+        .expect(200);
+
+      const userProfile = response.body as ValidateUserDto;
+
+      expect(userProfile).toBeDefined();
+      expect(userProfile.id).toBe(admin.id);
+      expect(userProfile.email).toBe(admin.email);
+      expect(userProfile.role).toBe(admin.role);
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await request(app.getHttpServer()).get('/auth/me').expect(401);
     });
   });
 });

@@ -17,6 +17,7 @@ import { ValidateUser } from '@/types';
 import { UsersService } from '@/users/users.service';
 
 import { RegisterUserDto } from './dto/register.dto';
+import { ValidateUserDto } from './dto/validateUser.dto';
 import { SessionService } from './session.service';
 import { TokenService } from './token.service';
 import { hashValue, validateValue } from './utils/hash';
@@ -106,5 +107,10 @@ export class AuthService {
     } catch {
       throw new UnauthorizedException('Refresh token is not valid.');
     }
+  }
+
+  async getMe(userId: string): Promise<ValidateUserDto> {
+    const user = await this.usersService.findOne(userId);
+    return { id: user.id, email: user.email, role: user.role };
   }
 }
