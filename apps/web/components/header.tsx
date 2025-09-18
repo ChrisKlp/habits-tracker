@@ -1,7 +1,10 @@
 'use client';
 
+import Link from 'next/link';
+
 import { Bell, LogOut, Settings, User } from 'lucide-react';
 
+import { logout } from '@/app/(main)/actions';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Logo } from './logo';
@@ -12,7 +15,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import { logout } from '@/app/(main)/actions';
 
 export function Header() {
   async function handleLogout() {
@@ -46,9 +48,11 @@ export function Header() {
                 </div>
               </div>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
-                <User className="mr-2 h-4 w-4" />
-                <span>Profile</span>
+              <DropdownMenuItem className="cursor-pointer" asChild>
+                <Link href="/profile">
+                  <User className="mr-2 h-4 w-4" />
+                  <span>Profile</span>
+                </Link>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
                 <Settings className="mr-2 h-4 w-4" />

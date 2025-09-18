@@ -1,23 +1,58 @@
 'use server';
 
-import { cookies } from 'next/headers';
+import { unstable_cache } from 'next/cache';
 import { redirect } from 'next/navigation';
 
-import { createServerApi } from '@/lib/api';
-import { AUTH_COOKIE, REFRESH_COOKIE } from '@/lib/auth/auth-cookie';
+import { createDynamicServerApi, createServerApi } from '@/lib/api';
+import { ApiError } from '@/lib/api/api-utils';
+import { clearAuthCookies, serializeAuthCookies } from '@/lib/auth/auth-cookie';
 
 export async function logout() {
+  await logoutUser();
+  await clearAuthCookies();
+  redirect('/login');
+}
+
+async function logoutUser() {
   const serverApi = await createServerApi();
 
   try {
-    await serverApi.POST('/auth/logout');
+    const { error } = await serverApi.POST('/auth/logout');
+    if (error) {
+      throw new ApiError(error);
+    }
   } catch (error) {
     console.error('API logout failed:', error);
   }
+}
 
-  const cookieStore = await cookies();
-  cookieStore.delete(AUTH_COOKIE);
-  cookieStore.delete(REFRESH_COOKIE);
+const getCachedProfile = unstable_cache(
+  async (authCookies: string | null) => {
+    if (!authCookies) return null;
 
-  redirect('/login');
+    const serverApi = await createDynamicServerApi(authCookies);
+    const { data, error } = await serverApi.GET('/profiles/me');
+
+    if (error) {
+      throw new Error("Couldn't get profile");
+    }
+
+    return data;
+  },
+  ['profile'],
+  {
+    revalidate: 300,
+  }
+);
+
+export async function getProfile() {
+  try {
+    const authCookies = await serializeAuthCookies();
+    const profile = await getCachedProfile(authCookies);
+    return profile;
+  } catch {
+    console.error('API getProfile failed:');
+    await logoutUser();
+    redirect('/login');
+  }
 }

@@ -19,7 +19,7 @@ export async function middleware(request: NextRequest) {
     const authCookies = getAuthCookie(refresh.response);
 
     if (authCookies?.accessToken) {
-      const response = NextResponse.next();
+      const response = NextResponse.redirect(request.url);
       response.cookies.set(authCookies.accessToken);
       return response;
     }

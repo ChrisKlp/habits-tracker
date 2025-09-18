@@ -1,9 +1,7 @@
-import { cookies } from 'next/headers';
-
 import createClient from 'openapi-fetch';
 
 import { paths } from '../../generated/openapi';
-import { AUTH_COOKIE, REFRESH_COOKIE } from '../auth/auth-cookie';
+import { serializeAuthCookies } from '../auth/auth-cookie';
 
 const baseUrl = process.env.NEXT_PUBLIC_API_URL;
 
@@ -21,27 +19,24 @@ export const clientApi = createClient<paths>({
  * It forwards headers from the incoming request and manually adds auth cookies.
  */
 export async function createServerApi() {
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get(AUTH_COOKIE)?.value;
-  const refreshToken = cookieStore.get(REFRESH_COOKIE)?.value;
-
+  const authCookies = await serializeAuthCookies();
   const headers: HeadersInit = {};
-  const cookieHeaderParts: string[] = [];
 
-  if (accessToken) {
-    cookieHeaderParts.push(`${AUTH_COOKIE}=${accessToken}`);
-  }
-  if (refreshToken) {
-    cookieHeaderParts.push(`${REFRESH_COOKIE}=${refreshToken}`);
-  }
-
-  if (cookieHeaderParts.length > 0) {
-    headers['Cookie'] = cookieHeaderParts.join('; ');
+  if (authCookies) {
+    headers['Cookie'] = authCookies;
   }
 
   return createClient<paths>({
     baseUrl,
     headers,
+  });
+}
+
+export async function createDynamicServerApi(authCookies: string) {
+  return createClient<paths>({
+    baseUrl,
+    headers: {
+      Cookie: authCookies,
+    },
   });
 }
