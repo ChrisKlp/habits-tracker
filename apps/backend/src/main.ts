@@ -22,6 +22,14 @@ async function bootstrap() {
 
   app.use(compression());
   app.use(helmet());
+
+  app.enableCors({
+    credentials: true,
+    methods: ['GET', 'HEAD', 'PUT', 'PATCH', 'POST', 'DELETE', 'OPTIONS'],
+    maxAge: 3600,
+    origin: (configService.get('ALLOWED_ORIGINS') as string).split(','),
+  });
+
   app.use(cookieParser());
 
   await app.listen(configService.get('PORT') ?? 3001, () => {
