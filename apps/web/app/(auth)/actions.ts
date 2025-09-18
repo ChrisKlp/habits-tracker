@@ -5,8 +5,8 @@ import { redirect } from 'next/navigation';
 
 import z from 'zod';
 
-import { createServerApi } from '@/lib/api';
-import { isApiError } from '@/lib/api/api-utils';
+import { ApiError, isApiError } from '@/lib/api/api-error';
+import { createServerClient } from '@/lib/api/api-server';
 import { getAuthCookie } from '@/lib/auth/auth-cookie';
 
 const authFormSchema = z.object({
@@ -24,14 +24,14 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
       password: formData.get('password'),
     });
 
-    const serverApi = await createServerApi();
+    const client = await createServerClient();
 
-    const { error: apiError, response } = await serverApi.POST('/auth/login', {
+    const { error: apiError, response } = await client.POST('/auth/login', {
       body: validatedData,
     });
 
     if (apiError) {
-      throw apiError;
+      throw new ApiError(apiError);
     }
 
     const cookie = getAuthCookie(response);

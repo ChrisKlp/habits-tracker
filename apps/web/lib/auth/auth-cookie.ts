@@ -1,9 +1,6 @@
-import { cookies } from 'next/headers';
-
 import { jwtDecode } from 'jwt-decode';
 
-export const AUTH_COOKIE = 'Authentication';
-export const REFRESH_COOKIE = 'Refresh';
+import { AUTH_COOKIE, REFRESH_COOKIE } from './constants';
 
 export function getAuthCookie(res: Response) {
   const setCookieHeader = res.headers.get('Set-Cookie');
@@ -37,29 +34,4 @@ export function getAuthCookie(res: Response) {
       expires: new Date(jwtDecode(refreshToken).exp! * 1000),
     },
   };
-}
-
-export async function serializeAuthCookies() {
-  const cookieStore = await cookies();
-
-  const accessToken = cookieStore.get(AUTH_COOKIE)?.value;
-  const refreshToken = cookieStore.get(REFRESH_COOKIE)?.value;
-
-  const cookieHeaderParts: string[] = [];
-
-  if (accessToken) {
-    cookieHeaderParts.push(`${AUTH_COOKIE}=${accessToken}`);
-  }
-  if (refreshToken) {
-    cookieHeaderParts.push(`${REFRESH_COOKIE}=${refreshToken}`);
-  }
-
-  return cookieHeaderParts.length > 0 ? cookieHeaderParts.join('; ') : null;
-}
-
-export async function clearAuthCookies() {
-  const cookieStore = await cookies();
-
-  cookieStore.delete(AUTH_COOKIE);
-  cookieStore.delete(REFRESH_COOKIE);
 }

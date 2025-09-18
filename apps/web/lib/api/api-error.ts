@@ -9,7 +9,7 @@ const apiErrorSchema = z.object({
 export type TApiError = z.infer<typeof apiErrorSchema>;
 
 export function isApiError(error: unknown): error is ApiError {
-  return apiErrorSchema.safeParse(error as TApiError).success;
+  return error instanceof ApiError || apiErrorSchema.safeParse(error as TApiError).success;
 }
 
 export class ApiError extends Error {

@@ -4,9 +4,9 @@ import Link from 'next/link';
 
 import { Bell, LogOut, Settings, User } from 'lucide-react';
 
-import { logout } from '@/app/(main)/actions';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/lib/auth/auth-context';
 import { Logo } from './logo';
 import {
   DropdownMenu,
@@ -17,9 +17,7 @@ import {
 } from './ui/dropdown-menu';
 
 export function Header() {
-  async function handleLogout() {
-    await logout();
-  }
+  const { user, logout } = useAuth();
 
   return (
     <header className="px-4 py-3">
@@ -33,9 +31,9 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src="/diverse-user-avatars.png" />
+                  {/* <AvatarImage src={profile?.avatar ?? ''} /> */}
                   <AvatarFallback className="bg-slate-200 text-sm text-slate-700">
-                    JD
+                    {user?.email[0] ?? ''}
                   </AvatarFallback>
                 </Avatar>
               </Button>
@@ -61,7 +59,7 @@ export function Header() {
               <DropdownMenuSeparator />
               <DropdownMenuItem
                 className="cursor-pointer text-red-600 focus:text-red-600"
-                onClick={handleLogout}
+                onClick={logout}
               >
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Logout</span>

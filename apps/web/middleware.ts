@@ -1,8 +1,9 @@
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-import { clientApi } from './lib/api';
-import { AUTH_COOKIE, getAuthCookie, REFRESH_COOKIE } from './lib/auth/auth-cookie';
+import { apiClient } from './lib/api/api-client';
+import { getAuthCookie } from './lib/auth/auth-cookie';
+import { AUTH_COOKIE, REFRESH_COOKIE } from './lib/auth/constants';
 
 const publicRoutes = ['/login'];
 
@@ -11,7 +12,7 @@ export async function middleware(request: NextRequest) {
   const authenticated = cookieStore.has(AUTH_COOKIE);
 
   if (!authenticated && cookieStore.has(REFRESH_COOKIE)) {
-    const refresh = await clientApi.POST('/auth/refresh', {
+    const refresh = await apiClient.POST('/auth/refresh', {
       headers: {
         Cookie: cookieStore.toString(),
       },
