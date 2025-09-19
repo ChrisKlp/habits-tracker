@@ -74,7 +74,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // );
 
     // return () => clearInterval(interval);
-  }, [checkAuth, user]);
+  }, [checkAuth]);
 
   return (
     <AuthContext

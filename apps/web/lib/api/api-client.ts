@@ -1,31 +1,37 @@
-'use client';
+import { redirect } from 'next/navigation';
 
 import createClient from 'openapi-fetch';
 
 import type { paths } from '@/generated/openapi';
+import { logger } from '@/lib/logger';
 import { BASE_URL } from './constants';
 
 async function customFetch(input: RequestInfo | URL, init?: RequestInit) {
   const requestUrl = input instanceof Request ? input.url : input.toString();
-  const response = await fetch(input, init);
 
-  if (response.status === 401 && !requestUrl.includes('/auth/refresh')) {
-    const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {
-      method: 'POST',
-      credentials: 'include',
-    });
+  logger.clientFetch(requestUrl, init?.method);
 
-    if (refreshResponse.ok) {
+  try {
+    const response = await fetch(input, init);
+
+    if (response.status === 401 && !requestUrl.includes('/auth/refresh')) {
+      logger.log('customFetch - attempting to refresh auth');
+
+      const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+
+      if (!refreshResponse.ok) {
+        redirect('/login');
+      }
+
       return fetch(input, init);
     }
-
-    if (typeof window !== 'undefined') {
-      window.location.href = '/login';
-      throw new Error('Session expired');
-    }
+    return response;
+  } catch {
+    return new Response('Could not connect to server', { status: 500 });
   }
-
-  return response;
 }
 
 export const apiClient = createClient<paths>({

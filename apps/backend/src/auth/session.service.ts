@@ -10,7 +10,7 @@ import { hashValue, validateValue } from './utils/hash';
 
 @Injectable()
 export class SessionService {
-  private readonly MAX_SESSIONS = 3;
+  private readonly MAX_SESSIONS = 1;
 
   constructor(@Drizzle() private readonly db: NodePgDatabase) {}
 

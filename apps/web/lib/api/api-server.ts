@@ -2,11 +2,12 @@ import { cookies } from 'next/headers';
 
 import createClient from 'openapi-fetch';
 
-import 'server-only';
-
 import type { paths } from '@/generated/openapi';
 import { BASE_URL } from '@/lib/api/constants';
 import { AUTH_COOKIE, REFRESH_COOKIE } from '@/lib/auth/constants';
+import { logger } from '@/lib/logger';
+
+import 'server-only';
 
 export async function createServerClient() {
   const cookieStore = await cookies();
@@ -24,6 +25,10 @@ export async function createServerClient() {
     baseUrl: BASE_URL,
     headers: {
       Cookie: cookieHeader,
+    },
+    fetch: input => {
+      logger.serverFetch(input.url, input.method);
+      return fetch(input);
     },
   });
 }
