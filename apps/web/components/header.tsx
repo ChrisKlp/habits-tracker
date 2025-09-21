@@ -4,20 +4,25 @@ import Link from 'next/link';
 
 import { Bell, LogOut, Settings, User } from 'lucide-react';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useAuth } from '@/lib/auth/auth-context';
-import { Logo } from './logo';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from './ui/dropdown-menu';
+} from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/lib/auth/auth-context';
+import { ProfileDto } from '@/types';
+import { Logo } from './logo';
 
-export function Header() {
-  const { user, logout } = useAuth();
+interface HeaderProps {
+  profile?: ProfileDto;
+}
+
+export function Header({ profile }: HeaderProps) {
+  const { logout } = useAuth();
 
   return (
     <header className="px-4 py-3">
@@ -31,9 +36,9 @@ export function Header() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="relative h-8 w-8 rounded-full p-0">
                 <Avatar className="h-8 w-8">
-                  {/* <AvatarImage src={profile?.avatar ?? ''} /> */}
+                  <AvatarImage src={profile?.avatar ?? ''} />
                   <AvatarFallback className="bg-slate-200 text-sm text-slate-700">
-                    {user?.email[0] ?? ''}
+                    {profile?.displayName[0] ?? ''}
                   </AvatarFallback>
                 </Avatar>
               </Button>

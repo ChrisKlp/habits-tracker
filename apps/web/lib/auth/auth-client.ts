@@ -15,8 +15,10 @@ export const authService = {
   },
 
   async logout() {
-    await apiClient.POST('/auth/logout', {});
-    window.location.href = '/login';
+    const { error } = await apiClient.POST('/auth/logout', {});
+
+    console.log({ error });
+    // window.location.href = '/login';
   },
 
   async refreshToken() {

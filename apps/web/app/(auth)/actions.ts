@@ -7,7 +7,7 @@ import z from 'zod';
 
 import { ApiError, isApiError } from '@/lib/api/api-error';
 import { createServerClient } from '@/lib/api/api-server';
-import { getAuthCookie } from '@/lib/auth/auth-cookie';
+import { getAuthCookie } from '@/lib/auth/utils';
 
 const authFormSchema = z.object({
   email: z.email(),

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import { BASE_URL } from './lib/api/constants';
-import { getAuthCookie } from './lib/auth/auth-cookie';
 import { AUTH_COOKIE, REFRESH_COOKIE } from './lib/auth/constants';
+import { getAuthCookie } from './lib/auth/utils';
 import { logger } from './lib/logger';
 
 export async function middleware(request: NextRequest) {
@@ -10,6 +10,8 @@ export async function middleware(request: NextRequest) {
   const refreshCookie = request.cookies.get(REFRESH_COOKIE);
 
   const isAuthPage = request.nextUrl.pathname.startsWith('/login');
+
+  logger.info(`[MIDDLEWARE] ${request.method} ${request.url}`);
 
   if (!isAuthPage) {
     if (!authCookie && refreshCookie) {

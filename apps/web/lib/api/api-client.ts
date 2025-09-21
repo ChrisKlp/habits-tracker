@@ -6,15 +6,19 @@ import type { paths } from '@/generated/openapi';
 import { logger } from '@/lib/logger';
 import { BASE_URL } from './constants';
 
+const noRefreshRoutes = ['/auth/refresh', '/auth/logout'];
+
+function isNoRefreshRoute(url: string): boolean {
+  return noRefreshRoutes.some(route => url.includes(route));
+}
+
 async function customFetch(input: RequestInfo | URL, init?: RequestInit) {
   const requestUrl = input instanceof Request ? input.url : input.toString();
-
-  logger.clientFetch(requestUrl, init?.method);
 
   try {
     const response = await fetch(input, init);
 
-    if (response.status === 401 && !requestUrl.includes('/auth/refresh')) {
+    if (response.status === 401 && !isNoRefreshRoute(requestUrl)) {
       logger.log('customFetch - attempting to refresh auth');
 
       const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {

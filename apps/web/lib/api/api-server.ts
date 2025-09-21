@@ -1,26 +1,18 @@
-import { cookies } from 'next/headers';
-
 import createClient from 'openapi-fetch';
 
 import type { paths } from '@/generated/openapi';
 import { BASE_URL } from '@/lib/api/constants';
-import { AUTH_COOKIE, REFRESH_COOKIE } from '@/lib/auth/constants';
+import { serializeAuthCookie } from '@/lib/auth/auth-server';
 import { logger } from '@/lib/logger';
 
 import 'server-only';
 
 export async function createServerClient() {
-  const cookieStore = await cookies();
-  const authCookie = cookieStore.get(AUTH_COOKIE);
-  const refreshCookie = cookieStore.get(REFRESH_COOKIE);
+  const cookieHeader = await serializeAuthCookie();
+  return createBaseServerClient(cookieHeader);
+}
 
-  const cookieHeader = [
-    authCookie ? `${authCookie.name}=${authCookie.value}` : '',
-    refreshCookie ? `${refreshCookie.name}=${refreshCookie.value}` : '',
-  ]
-    .filter(Boolean)
-    .join('; ');
-
+export function createBaseServerClient(cookieHeader: string) {
   return createClient<paths>({
     baseUrl: BASE_URL,
     headers: {

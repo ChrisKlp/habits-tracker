@@ -1,4 +1,4 @@
-import { getProfile } from './actions';
+import { getProfile } from '../actions';
 
 export default async function ProfilePage() {
   const profile = await getProfile();
