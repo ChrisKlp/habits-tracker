@@ -3,6 +3,7 @@ import {
   ConflictException,
   Injectable,
   InternalServerErrorException,
+  Logger,
   UnauthorizedException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
@@ -24,6 +25,8 @@ import { hashValue, validateValue } from './utils/hash';
 
 @Injectable()
 export class AuthService {
+  private readonly logger = new Logger(AuthService.name);
+
   constructor(
     @Drizzle() private readonly db: NodePgDatabase,
     private readonly tokenService: TokenService,
@@ -80,8 +83,12 @@ export class AuthService {
   }
 
   async logout(user: ValidateUser, refreshToken: string) {
-    const currentSession = await this.sessionService.validateSession(user.userId, refreshToken);
-    await this.sessionService.removeSession(currentSession.id);
+    try {
+      const currentSession = await this.sessionService.validateSession(user.userId, refreshToken);
+      await this.sessionService.removeSession(currentSession.id);
+    } catch {
+      this.logger.error('Failed to validate session while logging out');
+    }
   }
 
   async validateUser(email: string, password: string): Promise<ValidateUser> {

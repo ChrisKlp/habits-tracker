@@ -68,9 +68,9 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response
   ) {
     const refreshToken = req.cookies?.Refresh as string;
-    await this.authService.logout(user, refreshToken);
     res.clearCookie('Authentication');
     res.clearCookie('Refresh');
+    await this.authService.logout(user, refreshToken);
   }
 
   @ZodResponse({ type: ValidateUserDto, status: HttpStatus.OK })
