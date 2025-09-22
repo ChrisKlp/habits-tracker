@@ -9,6 +9,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { ApiQuery } from '@nestjs/swagger';
 import { ZodResponse } from 'nestjs-zod';
 
 import { CurrentUser } from '@/common/decorators/current-user.decorator';
@@ -33,10 +34,12 @@ export class HabitLogsController {
   }
 
   @ZodResponse({ type: [HabitLogWithHabitDto], status: HttpStatus.OK })
+  @ApiQuery({ name: 'habit_Id', required: false, type: String })
+  @ApiQuery({ name: 'date', required: false, type: String })
   @Get()
   findAll(
     @CurrentUser() user: ValidateUser,
-    @Query('habitId') habitId?: string,
+    @Query('habit_Id') habitId?: string,
     @Query('date') date?: string
   ) {
     return this.habitLogsService.findAll({
