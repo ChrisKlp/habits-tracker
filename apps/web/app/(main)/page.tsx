@@ -1,11 +1,13 @@
-import { HeatMapCalendar } from '@/components/heat-map-calendar';
-import { getHabitLogs } from './actions';
+import { Suspense } from 'react';
 
-export default async function HomePage() {
-  const habitLogs = await getHabitLogs();
+import { HeatMapCalendar } from '@/components/heat-map-calendar';
+
+export default function HomePage() {
   return (
     <main className="flex flex-col p-4">
-      <HeatMapCalendar habits={habitLogs ?? []} selectedDate={new Date().toISOString()} />
+      <Suspense fallback={<div>Loading...</div>}>
+        <HeatMapCalendar selectedDate={new Date().toISOString()} />
+      </Suspense>
     </main>
   );
 }
