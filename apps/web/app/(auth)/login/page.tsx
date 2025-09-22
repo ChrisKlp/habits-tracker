@@ -15,11 +15,9 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (state.error) {
-      toast.error(state.error, {
-        position: 'top-right',
-      });
+      toast.error(state.error);
     }
-  }, [state.error]);
+  }, [state]);
 
   function handleSubmit(formData: FormData) {
     setEmail(formData.get('email') as string);

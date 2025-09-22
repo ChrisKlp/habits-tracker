@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 
 import z from 'zod';
 
-import { ApiError, isApiError } from '@/lib/api/api-error';
+import { isApiError } from '@/lib/api/api-error';
 import { createServerClient } from '@/lib/api/api-server';
 import { getAuthCookie } from '@/lib/auth/utils';
 
@@ -26,13 +26,9 @@ export async function login(_: LoginActionState, formData: FormData): Promise<Lo
 
     const client = await createServerClient();
 
-    const { error: apiError, response } = await client.POST('/auth/login', {
+    const { response } = await client.POST('/auth/login', {
       body: validatedData,
     });
-
-    if (apiError) {
-      throw new ApiError(apiError);
-    }
 
     const cookie = getAuthCookie(response);
     const cookieStore = await cookies();
