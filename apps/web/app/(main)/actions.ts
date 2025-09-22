@@ -1,6 +1,6 @@
 import { unstable_cache } from 'next/cache';
 
-import { createBaseServerClient } from '@/lib/api/api-server';
+import { createBaseServerClient, createServerClient } from '@/lib/api/api-server';
 import { serializeAuthCookie } from '@/lib/auth/auth-server';
 
 export async function getProfile() {
@@ -16,3 +16,10 @@ const getCachedProfile = unstable_cache(
   },
   ['user-profile']
 );
+
+export async function getHabitLogs() {
+  const client = await createServerClient();
+  const { data } = await client.GET('/habit-logs');
+
+  return data;
+}
