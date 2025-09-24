@@ -28,9 +28,19 @@
         "^check-types"
       ]
     },
+    "pre-dev": {
+      "cache": false,
+      "persistent": false,
+      "dependsOn": [
+        "^pre-dev"
+      ]
+    },
     "dev": {
       "cache": false,
-      "persistent": true
+      "persistent": true,
+      "dependsOn": [
+        "pre-dev"
+      ]
     },
     "web#dev": {
       "cache": false,
