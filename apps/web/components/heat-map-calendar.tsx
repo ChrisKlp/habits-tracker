@@ -3,6 +3,15 @@
 import { useState } from 'react';
 
 import { useSuspenseQuery } from '@tanstack/react-query';
+import {
+  addMonths,
+  eachDayOfInterval,
+  endOfMonth,
+  format,
+  getDay,
+  startOfMonth,
+  subMonths,
+} from 'date-fns';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
@@ -15,6 +24,14 @@ interface HeatMapCalendarProps {
   //   onDateSelect: (date: string) => void;
 }
 
+const heatMapColors = [
+  'bg-muted hover:bg-secondary text-foreground', // level 0
+  'bg-chart-4 hover:bg-chart-3 text-foreground', // level 1
+  'bg-chart-3 hover:bg-chart-2 text-primary-foreground', // level 2
+  'bg-chart-2 hover:bg-chart-1 text-primary-foreground', // level 3
+  'bg-chart-1 hover:bg-primary text-primary-foreground', // level 4
+];
+
 export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
   const { data: habits } = useSuspenseQuery<HabitLogDto[]>({
     queryKey: ['habit-logs'],
@@ -22,70 +39,49 @@ export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
+  const formatDate = (date: Date) => {
+    return format(date, 'yyyy-MM-dd');
+  };
+
   const getDaysInMonth = (date: Date) => {
-    const year = date.getFullYear();
-    const month = date.getMonth();
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
-    const startingDayOfWeek = firstDay.getDay();
+    const firstDay = startOfMonth(date);
+    const startingDayOfWeek = (getDay(firstDay) + 6) % 7;
+    const daysInMonth = eachDayOfInterval({
+      start: firstDay,
+      end: endOfMonth(date),
+    });
 
     const days = [];
 
-    // Add empty cells for days before the first day of the month
     for (let i = 0; i < startingDayOfWeek; i++) {
       days.push(null);
     }
 
-    // Add all days of the month
-    for (let day = 1; day <= daysInMonth; day++) {
-      days.push(new Date(year, month, day));
-    }
+    days.push(...daysInMonth);
 
     return days;
   };
 
   const getCompletionLevel = (date: Date) => {
-    const dateString = date.toISOString().split('T')[0];
+    const dateString = formatDate(date);
     const completedHabits = habits.filter(habit => habit.date === dateString).length;
 
-    if (completedHabits === 0) return 0;
-    if (completedHabits === 1) return 1;
-    if (completedHabits === 2) return 2;
-    if (completedHabits === 3) return 3;
-    return 4;
+    return Math.min(completedHabits, 4);
   };
 
   const getHeatMapColor = (level: number) => {
-    switch (level) {
-      case 0:
-        return 'bg-muted hover:bg-secondary text-foreground';
-      case 1:
-        return 'bg-chart-4 hover:bg-chart-3 text-foreground';
-      case 2:
-        return 'bg-chart-3 hover:bg-chart-2 text-primary-foreground';
-      case 3:
-        return 'bg-chart-2 hover:bg-chart-1 text-primary-foreground';
-      case 4:
-        return 'bg-chart-1 hover:bg-primary text-primary-foreground';
-      default:
-        return 'bg-muted text-foreground';
-    }
+    return heatMapColors[level] || heatMapColors[0];
   };
 
   const days = getDaysInMonth(currentMonth);
-  const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  const monthName = format(currentMonth, 'MMMM yyyy');
 
   const navigateMonth = (direction: 'prev' | 'next') => {
-    setCurrentMonth(prev => {
-      const newDate = new Date(prev);
-      if (direction === 'prev') {
-        newDate.setMonth(prev.getMonth() - 1);
-      } else {
-        newDate.setMonth(prev.getMonth() + 1);
-      }
-      return newDate;
-    });
+    if (direction === 'prev') {
+      setCurrentMonth(subMonths(currentMonth, 1));
+    } else {
+      setCurrentMonth(addMonths(currentMonth, 1));
+    }
   };
 
   return (
@@ -103,7 +99,7 @@ export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
       </div>
 
       <div className="mb-2 grid grid-cols-7 gap-1">
-        {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
+        {['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'].map(day => (
           <div key={day} className="text-muted-foreground p-2 text-center text-xs font-medium">
             {day}
           </div>
@@ -116,10 +112,10 @@ export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
             return <div key={index} className="aspect-square" />;
           }
 
-          const dateString = day.toISOString().split('T')[0];
+          const dateString = formatDate(day);
           const completionLevel = getCompletionLevel(day);
           const isSelected = dateString === selectedDate;
-          const isToday = dateString === new Date().toISOString().split('T')[0];
+          const isToday = dateString === formatDate(new Date());
 
           return (
             <button
