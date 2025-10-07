@@ -6,7 +6,6 @@ import { useSuspenseQuery } from '@tanstack/react-query';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { ApiError } from '@/lib/api/api-error';
 import { cn } from '@/lib/utils';
 import type { HabitLogDto } from '@/types';
 
@@ -19,18 +18,6 @@ interface HeatMapCalendarProps {
 export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
   const { data: habits } = useSuspenseQuery<HabitLogDto[]>({
     queryKey: ['habit-logs'],
-    queryFn: () =>
-      new Promise((resolve, reject) => {
-        setTimeout(() => {
-          reject(
-            new ApiError({
-              error: 'Server error',
-              statusCode: 500,
-              message: 'Failed to fetch habit logs',
-            })
-          );
-        }, 1000);
-      }),
   });
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
