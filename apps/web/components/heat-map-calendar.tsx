@@ -2,7 +2,6 @@
 
 import { useState } from 'react';
 
-import { useSuspenseQuery } from '@tanstack/react-query';
 import {
   addMonths,
   eachDayOfInterval,
@@ -15,11 +14,10 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
+import { useHabitLogsQuery } from '@/lib/api/queries/habit-logs-query';
 import { cn } from '@/lib/utils';
-import type { HabitLogDto } from '@/types';
 
 interface HeatMapCalendarProps {
-  habits?: HabitLogDto[];
   selectedDate: string;
   //   onDateSelect: (date: string) => void;
 }
@@ -33,9 +31,7 @@ const heatMapColors = [
 ];
 
 export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
-  const { data: habits } = useSuspenseQuery<HabitLogDto[]>({
-    queryKey: ['habit-logs'],
-  });
+  const { data: habits } = useHabitLogsQuery();
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -64,7 +60,7 @@ export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
 
   const getCompletionLevel = (date: Date) => {
     const dateString = formatDate(date);
-    const completedHabits = habits.filter(habit => habit.date === dateString).length;
+    const completedHabits = habits.filter(habit => habit?.date === dateString).length;
 
     return Math.min(completedHabits, 4);
   };

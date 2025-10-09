@@ -17,6 +17,9 @@ export async function createServerClient() {
 }
 
 const throwErrorMiddleware: Middleware = {
+  async onRequest({ request }) {
+    logger.serverFetch(request.url, request.method);
+  },
   async onResponse({ response }) {
     if (!response.ok) {
       const error = await response.clone().json();
@@ -34,10 +37,6 @@ export function createBaseServerClient(cookieHeader: string) {
     baseUrl: BASE_URL,
     headers: {
       Cookie: cookieHeader,
-    },
-    fetch: input => {
-      logger.serverFetch(input.url, input.method);
-      return fetch(input);
     },
   });
 }
