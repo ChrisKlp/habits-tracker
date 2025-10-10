@@ -17,27 +17,24 @@ function isNoRefreshRoute(url: string): boolean {
 async function customFetch(input: RequestInfo | URL, init?: RequestInit) {
   const requestUrl = input instanceof Request ? input.url : input.toString();
 
-  try {
-    const response = await fetch(input, init);
+  const response = await fetch(input, init);
 
-    if (response.status === 401 && !isNoRefreshRoute(requestUrl)) {
-      logger.log('customFetch - attempting to refresh auth');
+  if (response.status === 401 && !isNoRefreshRoute(requestUrl)) {
+    logger.log('customFetch - attempting to refresh auth');
 
-      const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {
-        method: 'POST',
-        credentials: 'include',
-      });
+    const refreshResponse = await fetch(`${BASE_URL}/auth/refresh`, {
+      method: 'POST',
+      credentials: 'include',
+    });
 
-      if (!refreshResponse.ok) {
-        redirect('/login');
-      }
-
-      return fetch(input, init);
+    if (!refreshResponse.ok) {
+      redirect('/login');
     }
-    return response;
-  } catch {
-    return new Response('Server error', { status: 500 });
+
+    return await fetch(input, init);
   }
+
+  return response;
 }
 
 export const apiClient = createClient<paths>({
@@ -61,12 +58,17 @@ const clientOnlyMiddleware: Middleware = {
 const throwErrorMiddleware: Middleware = {
   async onResponse({ response }) {
     if (!response.ok) {
-      const error = await response.clone().json();
-      if (isApiError(error)) {
-        throw new ApiError(error);
-      } else {
-        throw new Error(error);
+      const contentType = response.headers.get('content-type');
+      
+      if (contentType?.includes('application/json')) {
+        const errorData = await response.clone().json();
+        
+        if (isApiError(errorData)) {
+          throw new ApiError(errorData);
+        }
       }
+      
+      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
     }
   },
 };
