@@ -14,12 +14,13 @@ import {
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
-import { useHabitLogsQuery } from '@/lib/api/queries/habit-logs-query';
 import { cn } from '@/lib/utils';
+import { HabitLogWithHabitDto } from '@/types';
 
 interface HeatMapCalendarProps {
+  habits: HabitLogWithHabitDto[];
   selectedDate: string;
-  //   onDateSelect: (date: string) => void;
+  onDateSelect: (date: string) => void;
 }
 
 const heatMapColors = [
@@ -30,9 +31,7 @@ const heatMapColors = [
   'bg-chart-1 hover:bg-primary text-primary-foreground', // level 4
 ];
 
-export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
-  const { data: habits } = useHabitLogsQuery();
-
+export function HeatMapCalendar({ habits, selectedDate, onDateSelect }: HeatMapCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const formatDate = (date: Date) => {
@@ -117,7 +116,7 @@ export function HeatMapCalendar({ selectedDate }: HeatMapCalendarProps) {
             <button
               key={dateString}
               onClick={() => {
-                console.log('Clicked on date', dateString);
+                onDateSelect(dateString);
               }}
               className={cn(
                 'aspect-square rounded-md text-xs font-medium transition-all duration-200 hover:scale-110',
