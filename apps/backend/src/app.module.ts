@@ -40,9 +40,10 @@ import { UsersModule } from './users/users.module';
   ],
   controllers: [],
   providers: [
+    ThrottlerGuard,
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
-    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    { provide: APP_GUARD, useExisting: ThrottlerGuard },
     { provide: APP_PIPE, useClass: ZodValidationPipe },
     { provide: APP_FILTER, useClass: DrizzleExceptionFilter },
     { provide: APP_INTERCEPTOR, useClass: ZodSerializerInterceptor },

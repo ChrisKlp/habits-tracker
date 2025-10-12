@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import cookieParser from 'cookie-parser';
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
@@ -27,6 +28,7 @@ import {
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
+import { DummyGuard } from './utils/DummyGuard';
 
 describe('HabitLogsController (e2e)', () => {
   let app: INestApplication<App>;
@@ -46,6 +48,8 @@ describe('HabitLogsController (e2e)', () => {
     })
       .overrideProvider(DRIZZLE_PROVIDER)
       .useValue(dbUtils.db)
+      .overrideProvider(ThrottlerGuard)
+      .useClass(DummyGuard)
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -102,6 +106,59 @@ describe('HabitLogsController (e2e)', () => {
       await request(app.getHttpServer())
         .post('/habit-logs')
         .send({ habitId: userHabit.id })
+        .expect(401);
+    });
+  });
+
+  describe('/habit-logs/toggle (POST)', () => {
+    it('should create a new habit log with value 1 if it does not exist', async () => {
+      const toggleDto: CreateHabitLogDto = {
+        habitId: userHabit.id,
+        date: new Date().toISOString().split('T')[0]!,
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/habit-logs/toggle')
+        .set('Cookie', userCookies)
+        .send(toggleDto)
+        .expect(200);
+
+      const body = response.body as HabitLogDto;
+      expect(body.habitId).toBe(toggleDto.habitId);
+      expect(body.userId).toBe(user.id);
+      expect(body.value).toBe(1);
+    });
+
+    it('should update habit log value to 0 if it already exists', async () => {
+      const date = new Date().toISOString().split('T')[0]!;
+      await insertHabitLog(dbUtils, {
+        habitId: userHabit.id,
+        userId: user.id,
+        date,
+        value: 1,
+      });
+
+      const toggleDto: CreateHabitLogDto = {
+        habitId: userHabit.id,
+        date,
+      };
+
+      const response = await request(app.getHttpServer())
+        .post('/habit-logs/toggle')
+        .set('Cookie', userCookies)
+        .send(toggleDto)
+        .expect(200);
+
+      const body = response.body as HabitLogDto;
+      expect(body.habitId).toBe(toggleDto.habitId);
+      expect(body.userId).toBe(user.id);
+      expect(body.value).toBe(0);
+    });
+
+    it('should return 401 if not authenticated', async () => {
+      await request(app.getHttpServer())
+        .post('/habit-logs/toggle')
+        .send({ habitId: userHabit.id, date: new Date().toISOString() })
         .expect(401);
     });
   });
@@ -170,7 +227,7 @@ describe('HabitLogsController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/habit-logs')
-        .query({ habitId: userHabit.id })
+        .query({ habit_id: userHabit.id })
         .set('Cookie', userCookies)
         .expect(200);
 
@@ -197,7 +254,7 @@ describe('HabitLogsController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/admin/habit-logs')
-        .query({ userId: user.id })
+        .query({ user_id: user.id })
         .set('Cookie', adminCookies)
         .expect(200);
 
@@ -222,8 +279,8 @@ describe('HabitLogsController (e2e)', () => {
 
       const response = await request(app.getHttpServer())
         .get('/admin/habit-logs')
-        .query({ userId: user.id })
-        .query({ habitId: userHabit.id })
+        .query({ user_id: user.id })
+        .query({ habit_id: userHabit.id })
         .set('Cookie', adminCookies)
         .expect(200);
 

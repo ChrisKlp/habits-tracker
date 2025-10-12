@@ -33,6 +33,12 @@ export class HabitLogsController {
     return this.habitLogsService.create(createHabitLogDto, user.userId);
   }
 
+  @ZodResponse({ type: HabitLogDto, status: HttpStatus.OK })
+  @Post('toggle')
+  async toggle(@CurrentUser() user: ValidateUser, @Body() toggleHabitLogDto: CreateHabitLogDto) {
+    return this.habitLogsService.toggle(toggleHabitLogDto, user.userId);
+  }
+
   @ZodResponse({ type: [HabitLogWithHabitDto], status: HttpStatus.OK })
   @ApiQuery({ name: 'habit_id', required: false, type: String })
   @ApiQuery({ name: 'date', required: false, type: String })

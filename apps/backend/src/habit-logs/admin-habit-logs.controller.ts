@@ -16,9 +16,9 @@ export class AdminHabitLogsController {
   @ZodResponse({ type: [HabitLogWithHabitDto], status: HttpStatus.OK })
   @Get()
   findAll(
-    @Query('habitId') habitId?: string,
+    @Query('habit_id') habitId?: string,
     @Query('date') date?: string,
-    @Query('userId') userId?: string
+    @Query('user_id') userId?: string
   ) {
     return this.habitLogsService.findAll({ userId, habitId, date });
   }

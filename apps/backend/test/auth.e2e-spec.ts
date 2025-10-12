@@ -1,5 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ThrottlerGuard } from '@nestjs/throttler';
 import cookieParser from 'cookie-parser';
 import { eq } from 'drizzle-orm';
 import request from 'supertest';
@@ -23,6 +24,7 @@ import {
   setupTestDb,
   truncateAllTables,
 } from './utils/db.utils';
+import { DummyGuard } from './utils/DummyGuard';
 
 describe('AuthController (e2e)', () => {
   let app: INestApplication<App>;
@@ -38,6 +40,8 @@ describe('AuthController (e2e)', () => {
     })
       .overrideProvider(DRIZZLE_PROVIDER)
       .useValue(dbUtils.db)
+      .overrideProvider(ThrottlerGuard)
+      .useClass(DummyGuard)
       .compile();
 
     app = moduleFixture.createNestApplication();

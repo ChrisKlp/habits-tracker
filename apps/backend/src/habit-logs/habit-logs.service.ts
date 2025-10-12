@@ -31,6 +31,39 @@ export class HabitLogsService {
     return habitLog;
   }
 
+  async toggle(toggleHabitLogDto: CreateHabitLogDto, userId: string) {
+    const { date, habitId } = toggleHabitLogDto;
+
+    const [existingLog] = await this.db
+      .select()
+      .from(habitLogsTable)
+      .where(
+        and(
+          eq(habitLogsTable.habitId, habitId),
+          eq(habitLogsTable.userId, userId),
+          eq(habitLogsTable.date, date)
+        )
+      )
+      .limit(1);
+
+    return existingLog
+      ? this.update(
+          existingLog.id,
+          {
+            ...toggleHabitLogDto,
+            value: 0,
+          },
+          userId
+        )
+      : this.create(
+          {
+            ...toggleHabitLogDto,
+            value: 1,
+          },
+          userId
+        );
+  }
+
   async findAll({ habitId, userId, date }: FindAllFilters) {
     const conditions: SQL<unknown>[] = [];
 
