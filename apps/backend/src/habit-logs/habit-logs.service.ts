@@ -51,7 +51,7 @@ export class HabitLogsService {
           existingLog.id,
           {
             ...toggleHabitLogDto,
-            value: 0,
+            value: existingLog.value ? 0 : 1,
           },
           userId
         )
