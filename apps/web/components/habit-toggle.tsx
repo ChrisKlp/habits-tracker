@@ -1,6 +1,7 @@
+import { useQueryClient } from '@tanstack/react-query';
 import { Check } from 'lucide-react';
 
-import { useHabitLogsMutation } from '@/lib/api/mutations/habit-logs-mutation';
+import { useToggleHabitLogMutation } from '@/lib/api/mutations/habit-logs-mutation';
 import { getFormattedToday } from '@/lib/utils';
 import { HabitDto, HabitLogDto } from '@/types';
 
@@ -10,15 +11,25 @@ interface HabitToggleProps {
 }
 
 export default function HabitToggle({ habit, log }: HabitToggleProps) {
+  const queryClient = useQueryClient();
   const isChecked = Boolean(log?.value);
-  const { mutate } = useHabitLogsMutation();
+
+  const { mutate } = useToggleHabitLogMutation();
 
   function handleToggle() {
-    void mutate({
-      habitId: habit.id,
-      date: getFormattedToday(),
-      value: isChecked ? 0 : 1,
-    });
+    void mutate(
+      {
+        habitId: habit.id,
+        date: getFormattedToday(),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ['habit-logs'],
+          });
+        },
+      }
+    );
   }
 
   return (
@@ -26,7 +37,7 @@ export default function HabitToggle({ habit, log }: HabitToggleProps) {
       onClick={() => {
         handleToggle();
       }}
-      className={`relative h-28 w-full max-w-md rounded-3xl transition-all duration-300 ease-in-out ${
+      className={`relative h-24 w-full rounded-2xl transition-all duration-300 ease-in-out ${
         isChecked
           ? 'bg-gradient-to-r from-violet-500 to-blue-500 shadow-lg'
           : 'bg-white shadow-md hover:shadow-lg'
@@ -35,10 +46,12 @@ export default function HabitToggle({ habit, log }: HabitToggleProps) {
       <div className="flex h-full items-center gap-4 px-6">
         <div className="text-4xl">{habit.icon}</div>
         <div className="flex-1 text-left">
-          <div className={`text-lg font-semibold ${isChecked ? 'text-white' : 'text-gray-800'}`}>
+          <div
+            className={`line-clamp-1 text-lg font-semibold ${isChecked ? 'text-white' : 'text-gray-800'}`}
+          >
             {habit.name}
           </div>
-          <div className={`text-sm ${isChecked ? 'text-white/80' : 'text-gray-500'}`}>
+          <div className={`line-clamp-2 text-sm ${isChecked ? 'text-white/80' : 'text-gray-500'}`}>
             {habit.description}
           </div>
         </div>
